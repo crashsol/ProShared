@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ProShare.UserApi.Data;
+using Microsoft.EntityFrameworkCore;
+using ProShare.UserApi.Models;
 
 namespace ProShare.UserApi
 {
@@ -23,6 +26,10 @@ namespace ProShare.UserApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<UserContext>(options =>
+            {
+                options.UseMySQL(Configuration.GetConnectionString("MysqlUser"));
+            });
             services.AddMvc();
         }
 
@@ -35,6 +42,24 @@ namespace ProShare.UserApi
             }
 
             app.UseMvc();
+            InitDataBase(app);
+        }
+
+        public void InitDataBase(IApplicationBuilder app)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var userDbContext = scope.ServiceProvider.GetService<UserContext>();
+
+                userDbContext.Database.Migrate();
+                if(!userDbContext.Users.Any())
+                {
+                    userDbContext.Users.Add(new AppUser { Name = "Crashsol", Title = "经理" });
+                    userDbContext.SaveChanges();
+                }
+
+            }
+
         }
     }
 }
