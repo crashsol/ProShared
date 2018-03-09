@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using ProShare.UserApi.Data;
 using Microsoft.EntityFrameworkCore;
 using ProShare.UserApi.Models;
+using ProShare.UserApi.Filters;
 
 namespace ProShare.UserApi
 {
@@ -30,7 +31,11 @@ namespace ProShare.UserApi
             {
                 options.UseMySQL(Configuration.GetConnectionString("MysqlUser"));
             });
-            services.AddMvc();
+            services.AddMvc(option => {
+                option.Filters.Add(typeof(GlobalExceptionFilter));//添加全局异常处理
+            });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
