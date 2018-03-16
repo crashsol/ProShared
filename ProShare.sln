@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProShare.UserApi", "ProShare.UserApi\ProShare.UserApi.csproj", "{DE785052-C13C-45E5-ABF9-4517B9F03B7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProShare.UserApi", "ProShare.UserApi\ProShare.UserApi.csproj", "{DE785052-C13C-45E5-ABF9-4517B9F03B7D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9FDBE791-9E80-4EB2-A0F9-CBC0019A1395}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProShare.UserApiTest", "ProShare.UserApiTest\ProShare.UserApiTest.csproj", "{55F6FC9A-763C-416F-90A7-DA1CBE89FE43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{DE785052-C13C-45E5-ABF9-4517B9F03B7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE785052-C13C-45E5-ABF9-4517B9F03B7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE785052-C13C-45E5-ABF9-4517B9F03B7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55F6FC9A-763C-416F-90A7-DA1CBE89FE43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55F6FC9A-763C-416F-90A7-DA1CBE89FE43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55F6FC9A-763C-416F-90A7-DA1CBE89FE43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55F6FC9A-763C-416F-90A7-DA1CBE89FE43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{55F6FC9A-763C-416F-90A7-DA1CBE89FE43} = {9FDBE791-9E80-4EB2-A0F9-CBC0019A1395}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC13CAEB-1970-42EA-B13B-44315F2DEAEB}
