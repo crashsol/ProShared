@@ -91,6 +91,27 @@ namespace ProShare.UserApi.Controllers
 
             return Json(entity);
         }
+        
 
+        /// <summary>
+        /// 根据用户手机号获取用户ID
+        /// </summary>
+        /// <param name="phone">手机号码</param>
+        /// <returns></returns>
+        [Route("get-or-create")]
+        [HttpPost]
+        public async Task<IActionResult> GetOrCreateUser(string phone)
+        {
+            var user =await _dbContext.Users.SingleOrDefaultAsync(b => b.Phone == phone);
+            if(user ==null)
+            {
+                //用户不存在，直接创建用户
+                user = new AppUser { Phone = phone };
+                await _dbContext.Users.AddAsync(user);
+
+                await _dbContext.SaveChangesAsync();                
+            }
+            return Ok(user.Id);
+        }
     }
 }
