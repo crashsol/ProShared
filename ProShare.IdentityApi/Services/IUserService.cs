@@ -12,6 +12,6 @@ namespace ProShare.IdentityApi.Services
         /// </summary>
         /// <param name="phone"></param>
         /// <returns></returns>
-        Task<int> GetOrCreate(string phone);
+        Task<int> GetOrCreateAsync(string phone);
     }
 }

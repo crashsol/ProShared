@@ -49,7 +49,7 @@ namespace ProShare.IdentityApi.Authentication
                 context.Result = errorValidationResult;
                 return;
             }
-            var userId = await _userService.GetOrCreate(phone);          
+            var userId = await _userService.GetOrCreateAsync(phone);          
             if(userId <=0)
             {  
                 //如果用户ID小于等于0 ，验证失败

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace ProShare.IdentityApi
+namespace ProShare.GatewayApi
 {
     public class Program
     {
@@ -18,9 +18,13 @@ namespace ProShare.IdentityApi
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)               
+            WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://+:5001")
+                .UseUrls("http://+:5000")
+                .ConfigureAppConfiguration((host, builder) => {
+                    builder.SetBasePath(host.HostingEnvironment.ContentRootPath)
+                   .AddJsonFile("Ocelot.json",false ,true);
+                })
                 .Build();
     }
 }
