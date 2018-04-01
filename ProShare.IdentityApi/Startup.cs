@@ -12,6 +12,8 @@ using Microsoft.Extensions.Options;
 using ProShare.IdentityApi.Services;
 using IdentityServer4;
 using ProShare.IdentityApi.Authentication;
+using ProShare.IdentityApi.Models.Dtos;
+using DnsClient;
 
 namespace ProShare.IdentityApi
 {
@@ -34,10 +36,23 @@ namespace ProShare.IdentityApi
                 .AddInMemoryClients(Config.GetClients())
                 .AddInMemoryIdentityResources(Config.GetIdentityResources());
 
-            services.AddMvc();
             services.AddSingleton(new HttpClient());
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthCodeService, TestAuthCodeService>();
+
+            //添加服务发现
+            //进行配置绑定       
+            services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
+            var serviceOption = new ServiceDiscoveryOptions();          
+            Configuration.GetSection("ServiceDiscovery").Bind(serviceOption);
+            services.AddSingleton<IDnsQuery>(b =>            
+            {              
+                //添加Consul服务地址
+                return new  LookupClient(serviceOption.Consul.DnsEndpoint.ToIPEndPoint());
+            });
+
+            services.AddMvc();
+          
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,6 +10,11 @@
           "Port": 5003                                //下游端口5003
         }
       ],
+
+
+	  "ServiceName": "UserApi",                       //服务发现名称
+      "LoadBalancer": "LeastConnection",              //负载均衡算法
+      "UseServiceDiscovery": true,                    //是否使用服务发现
       "UpstreamPathTemplate": "/users",               //上游访问地址
       "UpstreamHttpMethod": [ "Get" ],                //访问方法类型
 	   "AuthenticationOptions": {
@@ -23,5 +28,10 @@
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost"                //网关所在地址 一般是使用https 例如本项目启动在80端口，直接填写localhost
+	 "ServiceDiscoveryProvider": {               //服务发现地址
+      "Host": "localhost",
+      "Port": 8500
+    }
+
   }
 }

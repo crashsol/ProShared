@@ -1,3 +1,0 @@
-﻿1、在处理微服务内部各服务之间的调用，熔断、异常处理可以是用polly实现。
- 【强烈推荐】美团点评技术文章：服务容错模式： 
-  https://tech.meituan.com/service-fault-tolerant-pattern.html

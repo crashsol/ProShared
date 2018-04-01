@@ -3,23 +3,23 @@
     {
       "DownstreamPathTemplate": "/api/users",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5003
-        }
-      ],
       "UpstreamPathTemplate": "/users",
       "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "UserApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "ProShare",
         "AllowedScopes": []
       }
-
     }
 
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5000"
+    "BaseUrl": "http://localhost:5000",
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8500
+    }
   }
 }
