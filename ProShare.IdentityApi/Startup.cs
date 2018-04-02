@@ -14,6 +14,9 @@ using IdentityServer4;
 using ProShare.IdentityApi.Authentication;
 using ProShare.IdentityApi.Models.Dtos;
 using DnsClient;
+using ProShare.IdentityApi.Infrastructure;
+using Microsoft.AspNetCore.Http;
+using Resilience;
 
 namespace ProShare.IdentityApi
 {
@@ -36,19 +39,45 @@ namespace ProShare.IdentityApi
                 .AddInMemoryClients(Config.GetClients())
                 .AddInMemoryIdentityResources(Config.GetIdentityResources());
 
-            services.AddSingleton(new HttpClient());
+
+            //注入Application Service
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            //注入IResilientHttpClientFactory
+            services.AddSingleton<IResilientHttpClientFactory, ResilientHttpClientFactory>(sp =>
+            {
+                //从ServiceProvider中获得Logger
+                var logger = sp.GetRequiredService<ILogger<ResilientHttpClient>>();
+                //获得httpContextAccessor
+                var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+                //设置重试次数
+                var retryCount = 6;
+                //设置在断路器启用前，允许失败次数
+                var excetionAllowBeforeBreaking = 5;
+                //返回ResilienceFactroy实例
+                return new ResilientHttpClientFactory(logger, httpContextAccessor, retryCount, excetionAllowBeforeBreaking);
+            });
+
+            //注入IHttpClient 用ResilientHttpClient实现
+            services.AddSingleton<IHttpClient, ResilientHttpClient>(sp =>
+            {
+                //从服务中获得IResilientHttpClientFactory实例，并调用CreateResilientHttpClient 返回用ResilientHttpClient实例
+                return sp.GetRequiredService<IResilientHttpClientFactory>().CreateResilientHttpClient();
+            });
+
+
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthCodeService, TestAuthCodeService>();
-
+            
             //添加服务发现
             //进行配置绑定       
-            services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
-            var serviceOption = new ServiceDiscoveryOptions();          
-            Configuration.GetSection("ServiceDiscovery").Bind(serviceOption);
+            services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));          
             services.AddSingleton<IDnsQuery>(b =>            
-            {              
+            {
+                var serviceOption = b.GetRequiredService<IOptions<ServiceDiscoveryOptions>>();
                 //添加Consul服务地址
-                return new  LookupClient(serviceOption.Consul.DnsEndpoint.ToIPEndPoint());
+                return new  LookupClient(serviceOption.Value.Consul.DnsEndpoint.ToIPEndPoint());
             });
 
             services.AddMvc();

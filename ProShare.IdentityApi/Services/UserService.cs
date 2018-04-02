@@ -5,13 +5,15 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using DnsClient;
 using Microsoft.Extensions.Options;
+using ProShare.IdentityApi.Infrastructure;
 using ProShare.IdentityApi.Models.Dtos;
+using Resilience;
 
 namespace ProShare.IdentityApi.Services
 {
     public class UserService : IUserService
     {
-        private readonly HttpClient _httpClient;  
+        private readonly IHttpClient _httpClient;    
 
         private readonly IDnsQuery _dnsQuery;
 
@@ -20,7 +22,7 @@ namespace ProShare.IdentityApi.Services
         //服务请求地址
         private readonly string QueryAction = "/api/users/get-or-create";
 
-        public UserService(HttpClient httpClient,IDnsQuery dnsQuery,IOptions<ServiceDiscoveryOptions> option)
+        public UserService(IHttpClient httpClient,IDnsQuery dnsQuery,IOptions<ServiceDiscoveryOptions> option)
         {
             _httpClient = httpClient;         
             _dnsQuery = dnsQuery ?? throw new ArgumentNullException(nameof(dnsQuery));
