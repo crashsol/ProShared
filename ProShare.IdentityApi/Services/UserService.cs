@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DnsClient;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProShare.IdentityApi.Infrastructure;
 using ProShare.IdentityApi.Models.Dtos;
@@ -19,14 +20,17 @@ namespace ProShare.IdentityApi.Services
 
         private readonly ServiceDiscoveryOptions _serviceOption;
 
+        private readonly ILogger<UserService> _ilogger;
+
         //服务请求地址
         private readonly string QueryAction = "/api/users/get-or-create";
 
-        public UserService(IHttpClient httpClient,IDnsQuery dnsQuery,IOptions<ServiceDiscoveryOptions> option)
+        public UserService(IHttpClient httpClient,IDnsQuery dnsQuery,IOptions<ServiceDiscoveryOptions> option, ILogger<UserService> logger )
         {
             _httpClient = httpClient;         
             _dnsQuery = dnsQuery ?? throw new ArgumentNullException(nameof(dnsQuery));
             _serviceOption = option.Value ?? throw new ArgumentNullException(nameof(option));
+            _ilogger = logger;
 
         }
 
@@ -34,17 +38,27 @@ namespace ProShare.IdentityApi.Services
 
         public async Task<int> GetOrCreateAsync(string phone)
         {
-            var query = new Dictionary<string, string> { { "phone", phone } };
-            var queryContent = new FormUrlEncodedContent(query);
-            var queryUrl = await GetApplicateUrlFromConsulAsync();
-            var response = await _httpClient.PostAsync(queryUrl, queryContent);
-            if (response.IsSuccessStatusCode)
-            {
-                var userId = await response.Content.ReadAsStringAsync();
-                int.TryParse(userId, out int id);
-                return id;
+            var form = new Dictionary<string, string> { { "phone", phone } };
 
+            try
+            {
+                var queryUrl = await GetApplicateUrlFromConsulAsync();
+                var response = await _httpClient.PostAsync(queryUrl, form);
+                if (response.IsSuccessStatusCode)
+                {
+                    var userId = await response.Content.ReadAsStringAsync();
+                    int.TryParse(userId, out int id);
+                    return id;
+
+                }
             }
+            catch (Exception ex)
+            {
+                _ilogger.LogError("GetOrCreateAsync 在重试后调用失败", ex.Message + ex.StackTrace);
+                throw;
+            }
+
+          
             return 0;
         }
 
