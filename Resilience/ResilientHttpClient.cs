@@ -103,12 +103,14 @@ namespace Resilience
         {
             if (method != HttpMethod.Post && method != HttpMethod.Put)
             {
-                throw new ArgumentException("调用方法类型不正确.", nameof(method));            }
+                throw new ArgumentException("调用方法类型不正确.", nameof(method));
+            }
 
             var origin = GetOriginFromUri(uri);
 
             //根据名称origin名称，获得PoliyWary，并返回
-            return HttpInvoker(origin, async () =>            {
+            return HttpInvoker(origin, async () =>            
+            {
 
                 //构建请求
                 var requestMessage = requestFunc();

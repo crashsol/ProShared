@@ -59,11 +59,7 @@ namespace ProShare.IdentityApi
             });
 
             //注入IHttpClient 用ResilientHttpClient实现
-            services.AddSingleton<IHttpClient, ResilientHttpClient>(sp =>
-            {
-                //从服务中获得IResilientHttpClientFactory实例，并调用CreateResilientHttpClient 返回用ResilientHttpClient实例
-                return sp.GetRequiredService<IResilientHttpClientFactory>().CreateResilientHttpClient();
-            });
+            services.AddSingleton<IHttpClient, ResilientHttpClient>(sp => sp.GetService<IResilientHttpClientFactory>().CreateResilientHttpClient());       
 
 
 

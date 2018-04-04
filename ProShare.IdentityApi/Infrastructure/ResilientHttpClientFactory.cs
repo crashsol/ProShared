@@ -29,16 +29,16 @@ namespace ProShare.IdentityApi.Infrastructure
         }
 
         public ResilientHttpClient CreateResilientHttpClient()
-                    => new ResilientHttpClient((origin) => CreatePolicies(origin), _logger, _httpContextAccessor);
+                    => new ResilientHttpClient((origin) => CreatePolicies(), _logger, _httpContextAccessor);
 
 
         //origin  创建 Policy 策略，这个可以根据origin 设定不同的Policy组
-        private Policy[] CreatePolicies(string origin)
+        private Policy[] CreatePolicies()
           => new Policy[]
           {
                 //处理HttpRequestException
                 Policy.Handle<HttpRequestException>()
-                        .WaitAndRetry(
+                        .WaitAndRetryAsync(
                              _retryCount, //重试次数
                               retryAttempt => TimeSpan.FromSeconds(Math.Pow(2,retryAttempt)),//每次重试时间是2次方
                        (exception,timespan,retryCount,context) =>{
