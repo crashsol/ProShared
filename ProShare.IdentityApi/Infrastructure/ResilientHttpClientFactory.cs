@@ -47,7 +47,7 @@ namespace ProShare.IdentityApi.Infrastructure
                            //timespan 时间间隔
                            //retryCount 当前重试次数
                            //content 类容
-                        var msg = $"第 {retryCount} 几次进行错误重试 " +
+                        var msg = $"第 {retryCount} 次进行错误重试 " +
                                       $"of {context.PolicyKey} " +
                                       $"at {context.ExecutionKey}, " +
                                       $"due to: {exception}.";
@@ -63,12 +63,12 @@ namespace ProShare.IdentityApi.Infrastructure
                             (exception,duration) =>
                             {
                                 //断路器打开进行日志记录
-                                _logger.LogTrace("断路器打开");
+                                _logger.LogWarning("****************断路器打开***************");
                             },
                             //断路器关闭
                             ()=>{
 
-                                _logger.LogTrace("断路器关闭");
+                                _logger.LogWarning("****************断路器关闭***************");
                             })
 
           };
