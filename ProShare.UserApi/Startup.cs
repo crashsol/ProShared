@@ -113,12 +113,12 @@ namespace ProShare.UserApi
             //在程序停止时,向Consul 中心进行注销
             applicationLifetime.ApplicationStopped.Register(() =>
             {
-                //foreach (var address in addresses)
-                //{
-                //    //设定服务Id(全局唯一 unique）
-                //    var serviceId = $"{serviceOptions.Value.ServiceName}_{address.Host}:{address.Port}";
-                //    consulClient.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
-                //}
+                foreach (var address in addresses)
+                {
+                    //设定服务Id(全局唯一 unique）
+                    var serviceId = $"{serviceOptions.Value.ServiceName}_{address.Host}:{address.Port}";
+                    consulClient.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
+                }
             });
 
             #endregion
