@@ -51,21 +51,21 @@ namespace ProShare.UserApi.Controllers
 
             //将需要跟新的数据复制给对象
             patch.ApplyTo(entity);
-         
+
             //如果有修改Properties, 不追踪 AppUser 实体的 Properties 属性 单独通过以下的方法进行处理
             if (entity.Properties != null)
             {
-           
+
                 foreach (var item in entity.Properties)
                 {
                     _dbContext.Entry(item).State = EntityState.Detached;
-                  
+
                 }
-              
+
                 //Properties 属性 单独通过以下的方法进行处理
                 //获取原来用户所有的Properties, 必须使用 AsNoTracking()，否则会自动附加到用户属性上
                 var originProperties = await _dbContext.UserProperties.AsNoTracking().Where(b => b.AppUserId == UserIdentity.UserId).ToListAsync();
-           
+
 
                 foreach (var item in originProperties)
                 {
@@ -82,16 +82,16 @@ namespace ProShare.UserApi.Controllers
                         //如果不存在做新增操作
                         _dbContext.Add(item);
                     }
-                }               
+                }
             }
-            
+
             //更新用户信息
             _dbContext.Users.Update(entity);
             _dbContext.SaveChanges();
 
             return Json(entity);
         }
-        
+
 
         /// <summary>
         /// 根据用户手机号获取用户ID
@@ -102,16 +102,63 @@ namespace ProShare.UserApi.Controllers
         [HttpPost]
         public async Task<IActionResult> GetOrCreateUser(string phone)
         {
-            var user =await _dbContext.Users.SingleOrDefaultAsync(b => b.Phone == phone);
-            if(user ==null)
+            var user = await _dbContext.Users.SingleOrDefaultAsync(b => b.Phone == phone);
+            if (user == null)
             {
                 //用户不存在，直接创建用户
                 user = new AppUser { Phone = phone };
                 await _dbContext.Users.AddAsync(user);
 
-                await _dbContext.SaveChangesAsync();                
+                await _dbContext.SaveChangesAsync();
             }
             return Ok(user.Id);
         }
+
+        /// <summary>
+        /// 获取用户标签数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("tags")]
+        public async Task<IActionResult> GetUserTagsAsync()
+        {
+            return Ok(await _dbContext.UserTags.Where(b => b.AppUserId == UserIdentity.UserId).ToListAsync());
+        }
+
+        /// <summary>
+        /// 通过手机号查询信息
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <returns></returns>
+        /// 
+        [HttpPost]
+        [Route("search/{phone}")]
+        public async Task<IActionResult> Search(string phone)
+        {
+            return Ok(await _dbContext.Users.Include(b => b.Properties).SingleOrDefaultAsync(b => b.Id == UserIdentity.UserId && b.Phone == phone));
+        }
+
+        /// <summary>
+        /// 更新用户标签数据
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        /// 
+        [HttpPut]
+        [Route("tags")]
+        public async Task<IActionResult> UpdateTags([FromBody]List<string> tags)
+        {
+            var originTags = await _dbContext.UserTags.Where(b => b.AppUserId == UserIdentity.UserId).ToListAsync();
+            var newTags = tags.Except(originTags.Select(b => b.Tag));
+            await _dbContext.UserTags.AddRangeAsync(newTags.Select(b => new UserTag
+            {
+                CreateTime = DateTime.Now,
+                AppUserId = UserIdentity.UserId,
+                Tag = b
+            }));
+            await _dbContext.SaveChangesAsync();
+            return Ok();
+        }
+
     }
 }

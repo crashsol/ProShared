@@ -14,5 +14,7 @@ namespace ProShare.UserApi.Models
         public int AppUserId { get; set; }
 
         public string Tag { get; set; }
+
+        public DateTime CreateTime { get; set; }
     }
 }

@@ -59,5 +59,10 @@ namespace ProShare.UserApi.Data
         /// 用户管理属性集合
         /// </summary>
         public DbSet<UserProperty> UserProperties { get; set; }
+
+        /// <summary>
+        /// 用户标签数据
+        /// </summary>
+        public DbSet<UserTag> UserTags { get; set; }
     }
 }
