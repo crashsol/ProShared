@@ -11,7 +11,7 @@ namespace ProShare.ContactApi.Models
     public class ContactApplyRequest
     {
         /// <summary>
-        /// 被用户ID
+        /// 被申请用户ID
         /// </summary>
         public int UserId { get; set; }
 

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ProShare.ContactApi.Models;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using System.Threading;
 
 namespace ProShare.ContactApi.Data
 {
@@ -14,20 +17,22 @@ namespace ProShare.ContactApi.Data
         {
             _context = contactContext;
         }
-        
-        public Task<bool> AddRequest(ContactApplyRequest request)
+
+        public Task<bool> AddRequest(ContactApplyRequest request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> Approval(int applierId)
+        public Task<bool> Approval(int applierId, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> GetRequestList(int userId)
+        public async Task<List<ContactApplyRequest>> GetRequestList(int userId,CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            
+            var requests = await _context.ContactApplyRequests.FindAsync(b => b.UserId == userId);
+            return requests.ToList(cancellationToken);
         }
     }
 }

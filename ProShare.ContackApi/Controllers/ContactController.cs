@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using ProShare.ContactApi.Data;
 using ProShare.ContactApi.Services;
 using ProShare.ContactApi.Models;
+using System.Threading;
 
 namespace ProShare.ContactApi.Controllers
 {
@@ -32,13 +33,14 @@ namespace ProShare.ContactApi.Controllers
         [Route("apply-requests")]
         public async Task<IActionResult> GetApplyRequest()
         {
-            var result = await _contactApplyRequestRepository.GetRequestList(UserIdentity.UserId);
+            var result = await _contactApplyRequestRepository.GetRequestList(UserIdentity.UserId,new CancellationToken());
             return Ok(result);
         }
 
         /// <summary>
-        /// 添加好友请求
+        /// 添加好友 请求
         /// </summary>
+        /// <param name="userId">待添加的用户ID</param>
         /// <returns></returns>
         [HttpPost]
         [Route("apply-requests")]
@@ -52,8 +54,10 @@ namespace ProShare.ContactApi.Controllers
             }
             var result = await _contactApplyRequestRepository.AddRequest(new ContactApplyRequest
             {
-                ApplierId = UserIdentity.UserId,
-                UserId = userId,
+                ApplierId = UserIdentity.UserId, //申请人ID 及操作者本人
+                
+                //待添加的好友信息
+                UserId = userId,                
                 Name = baseUserInfo.Name,
                 Title = baseUserInfo.Title,
                 Company = baseUserInfo.Company,

@@ -15,7 +15,7 @@ namespace ProShare.ContactApi.Models
         /// <summary>
         /// 用户ID
         /// </summary>
-        public string UserId { get; set; }
+        public int UserId { get; set; }
 
         /// <summary>
         /// 好友列表
