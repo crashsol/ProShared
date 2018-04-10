@@ -3,28 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-
-namespace ProShare.ContactApi.Models
+namespace ProShare.ContactApi.Models.VModels
 {
     /// <summary>
-    /// 通讯录
+    /// 给好友打标签
     /// </summary>
-    public class ContactBook
+    public class ContactTagVModel
     {
-        public ContactBook()
+
+        public ContactTagVModel()
         {
-
-            Contacts = new List<Contact>();
+            Tags = new List<string>();
         }
-
         /// <summary>
-        /// 用户ID
+        /// 好友ID
         /// </summary>
         public int UserId { get; set; }
 
         /// <summary>
-        /// 好友列表
+        /// 标签信息
         /// </summary>
-        public List<Contact> Contacts { get; set; }
+        public List<string> Tags { get; set; }
     }
 }

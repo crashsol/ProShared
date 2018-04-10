@@ -11,24 +11,26 @@ namespace ProShare.ContactApi.Data
     {
 
         /// <summary>
-        /// 添加好友添加申请请求
+        /// 添加好友申请请求
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<bool> AddRequest(ContactApplyRequest request, CancellationToken cancellationToken);
+        Task<bool> AddRequestAsync(ContactApplyRequest request, CancellationToken cancellationToken);
 
         /// <summary>
-        /// 通过 好友添加申请
+        /// 通过好友申请
         /// </summary>
-        /// <param name="applierId"></param>
+        /// <param name="userId">操作者ID</param>
+        /// <param name="applierId">申请人ID</param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<bool> Approval(int applierId, CancellationToken cancellationToken);
+        Task<bool> ApprovalAsync(int userId, int applierId, CancellationToken cancellationToken);
 
         /// <summary>
-        /// 获取所有好友添加申请
+        /// 获取好友添加申请
         /// </summary>
-        /// <param name="userId">用户ID</param>
+        /// <param name="userId">当前登录用户ID</param>
         /// <returns></returns>
-        Task<List<ContactApplyRequest>> GetRequestList(int userId,CancellationToken cancellationToken);
+        Task<List<ContactApplyRequest>> GetRequestList(int userId, CancellationToken cancellationToken);
     }
 }

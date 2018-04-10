@@ -16,23 +16,23 @@ namespace ProShare.ContactApi.Models
         public int UserId { get; set; }
 
         /// <summary>
-        /// 被申请人名称
+        /// 申请人名称
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 被申请人公司
+        /// 申请人公司
         /// </summary>
         public string Company { get; set; }
 
         /// <summary>
-        /// 被申请人职位
+        /// 申请人职位
         /// </summary>
         public string Title { get; set; }
 
 
         /// <summary>
-        /// 被申请人头像
+        /// 申请人头像
         /// </summary>
         public string Avatar { get; set; }
 
@@ -43,7 +43,7 @@ namespace ProShare.ContactApi.Models
         public int ApplierId { get; set; }
 
         /// <summary>
-        /// 是否通过 0 未通过 1已通过
+        /// 是否通过 0未通过 1已通过
         /// </summary>
         public int Approvaled { get; set; }
 
@@ -53,6 +53,9 @@ namespace ProShare.ContactApi.Models
         /// </summary>
         public DateTime HandleTime { get; set; }
 
-        public DateTime CreateTime { get; set; }
+        /// <summary>
+        /// 申请时间
+        /// </summary>
+        public DateTime ApplyTime { get; set; }
     }
 }

@@ -19,6 +19,7 @@ namespace ProShare.ContactApi
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseUrls("http://localhost:5003")
                 .UseStartup<Startup>()
                 .Build();
     }

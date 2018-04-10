@@ -10,6 +10,11 @@ namespace ProShare.ContactApi.Models
     /// </summary>
     public class Contact
     {
+
+        public Contact()
+        {
+            Tags = new List<string>();
+        }
         /// <summary>
         /// 用户ID
         /// </summary>
@@ -35,6 +40,11 @@ namespace ProShare.ContactApi.Models
         /// 头像
         /// </summary>
         public string Avatar { get; set; }
+
+        /// <summary>
+        /// 用户标签
+        /// </summary>
+        public List<string> Tags { get; set; }
 
     }
 }
