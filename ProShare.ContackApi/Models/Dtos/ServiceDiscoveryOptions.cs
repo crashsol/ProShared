@@ -11,9 +11,14 @@ namespace ProShare.ContactApi.Models.Dtos
     public class ServiceDiscoveryOptions
     {
         /// <summary>
-        /// 注册或发现  服务名称
+        /// 注册的服务名称
         /// </summary>
         public string ServiceName { get; set; }
+
+        /// <summary>
+        /// 需要发现的服务名称
+        /// </summary>
+        public string DisConverServiceName { get; set; }
 
         /// <summary>
         /// Consul 节点信息

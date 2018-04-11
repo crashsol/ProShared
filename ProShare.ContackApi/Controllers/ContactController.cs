@@ -9,6 +9,7 @@ using ProShare.ContactApi.Services;
 using ProShare.ContactApi.Models;
 using System.Threading;
 using ProShare.ContactApi.Models.VModels;
+using Infrastructure.OperationException;
 
 namespace ProShare.ContactApi.Controllers
 {
@@ -16,11 +17,13 @@ namespace ProShare.ContactApi.Controllers
     public class ContactController : BaseController
     {
 
+      
         private readonly IContactApplyRequestRepository _contactApplyRequestRepository;
 
         private readonly IContactBookRepository _contactBookRepository;
 
         private readonly IUserService _userService;
+       
 
         public ContactController(IUserService userService, IContactApplyRequestRepository contactApplyRequestRepository,
             ILogger<BaseController> logger,
@@ -30,6 +33,21 @@ namespace ProShare.ContactApi.Controllers
             _userService = userService;
             _contactBookRepository = contactBookRepository;
         }
+
+
+        /// <summary>
+        /// 获取好友列表
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> GetContactsAsync(CancellationToken cancellationToken)
+        {
+           return  Ok(await _contactBookRepository.GetContactsAsync(UserIdentity.UserId, cancellationToken));
+
+        }
+
 
         /// <summary>
         /// 获取好友申请列表
@@ -53,7 +71,7 @@ namespace ProShare.ContactApi.Controllers
         public async Task<IActionResult> AddApplyRequesetAsync(int userId, CancellationToken cancellationToken)
         {
             //获取本人的个人信息
-            var baseUserInfo = _userService.GetBaseUserInfo(UserIdentity.UserId);
+            var baseUserInfo =await _userService.GetBaseUserInfoAsync(UserIdentity.UserId);
             if (baseUserInfo == null)
             {
                 throw new UserOperationException("用户参数错误");
@@ -100,13 +118,19 @@ namespace ProShare.ContactApi.Controllers
             }
             //通过好友添加申请后， 更新双方的通讯里
             //本人信息
-            var userinfo = _userService.GetBaseUserInfo(UserIdentity.UserId);
-            var applyUserinfo = _userService.GetBaseUserInfo(applierId);
+            var userinfo =await _userService.GetBaseUserInfoAsync(UserIdentity.UserId);
+            var applyUserinfo =await _userService.GetBaseUserInfoAsync(applierId);
             await _contactBookRepository.AddContactAsync(UserIdentity.UserId, applyUserinfo, cancellationToken);
             await _contactBookRepository.AddContactAsync(applierId, userinfo, cancellationToken);          
             return Ok();
         }
 
+        /// <summary>
+        /// 给好友打标签
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("tag")]
         public async Task<IActionResult> TagContactAsync([FromBody]ContactTagVModel model,CancellationToken cancellationToken)

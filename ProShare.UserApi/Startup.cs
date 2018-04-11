@@ -11,11 +11,11 @@ using Microsoft.Extensions.Options;
 using ProShare.UserApi.Data;
 using Microsoft.EntityFrameworkCore;
 using ProShare.UserApi.Models;
-using ProShare.UserApi.Filters;
 using ProShare.UserApi.Models.Dtos;
 using Consul;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http.Features;
+using Infrastructure.Filter;
 
 namespace ProShare.UserApi
 {

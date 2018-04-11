@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProShare.ContactApi
+namespace Infrastructure.OperationException
 {
     /// <summary>
     /// 异常信息返回

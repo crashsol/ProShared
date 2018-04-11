@@ -8,6 +8,7 @@ using ProShare.UserApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.JsonPatch;
 using ProShare.UserApi.Models;
+using Infrastructure.OperationException;
 
 namespace ProShare.UserApi.Controllers
 {
@@ -94,13 +95,13 @@ namespace ProShare.UserApi.Controllers
 
 
         /// <summary>
-        /// 根据用户手机号获取用户ID
+        /// 检查或则创建用户
         /// </summary>
         /// <param name="phone">手机号码</param>
-        /// <returns></returns>
-        [Route("get-or-create")]
+        /// <returns>用户ID</returns>
+        [Route("check-or-create")]
         [HttpPost]
-        public async Task<IActionResult> GetOrCreateUser(string phone)
+        public async Task<IActionResult> CheckOrCreateUser(string phone)
         {
             var user = await _dbContext.Users.SingleOrDefaultAsync(b => b.Phone == phone);
             if (user == null)
@@ -112,6 +113,27 @@ namespace ProShare.UserApi.Controllers
                 await _dbContext.SaveChangesAsync();
             }
             return Ok(user.Id);
+        }
+
+        /// <summary>
+        /// 更新用户标签数据
+        /// </summary>
+        /// <param name="tags">用户标签数据</param>
+        /// <returns></returns>       
+        [HttpPut]
+        [Route("tags")]
+        public async Task<IActionResult> UpdateTags([FromBody]List<string> tags)
+        {
+            var originTags = await _dbContext.UserTags.Where(b => b.AppUserId == UserIdentity.UserId).ToListAsync();
+            var newTags = tags.Except(originTags.Select(b => b.Tag));
+            await _dbContext.UserTags.AddRangeAsync(newTags.Select(b => new UserTag
+            {
+                CreateTime = DateTime.Now,
+                AppUserId = UserIdentity.UserId,
+                Tag = b
+            }));
+            await _dbContext.SaveChangesAsync();
+            return Ok();
         }
 
         /// <summary>
@@ -129,36 +151,38 @@ namespace ProShare.UserApi.Controllers
         /// 通过手机号查询信息
         /// </summary>
         /// <param name="phone">手机号</param>
-        /// <returns></returns>
+        /// <returns>人员信息</returns>
         /// 
         [HttpPost]
         [Route("search/{phone}")]
         public async Task<IActionResult> Search(string phone)
         {
-            return Ok(await _dbContext.Users.Include(b => b.Properties).SingleOrDefaultAsync(b => b.Id == UserIdentity.UserId && b.Phone == phone));
+            return Ok(await _dbContext.Users.Include(b => b.Properties).SingleOrDefaultAsync(b => b.Phone == phone));
         }
 
-        /// <summary>
-        /// 更新用户标签数据
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns></returns>
-        /// 
-        [HttpPut]
-        [Route("tags")]
-        public async Task<IActionResult> UpdateTags([FromBody]List<string> tags)
+        [HttpGet]
+        [Route("get-userinfo/{id}")]
+        public async Task<IActionResult> GetUserBaseInfoAsync(int id)
         {
-            var originTags = await _dbContext.UserTags.Where(b => b.AppUserId == UserIdentity.UserId).ToListAsync();
-            var newTags = tags.Except(originTags.Select(b => b.Tag));
-            await _dbContext.UserTags.AddRangeAsync(newTags.Select(b => new UserTag
+            var entity =await _dbContext.Users.SingleOrDefaultAsync(b => b.Id == id);
+
+            if (entity == null)
             {
-                CreateTime = DateTime.Now,
-                AppUserId = UserIdentity.UserId,
-                Tag = b
-            }));
-            await _dbContext.SaveChangesAsync();
-            return Ok();
+                _logger.LogInformation($"查询用户编号 {id},信息不存在");
+                throw new UserOperationException("用户不存在");
+            }
+            return Ok(new{
+                        UserId = entity.Id,
+                        Name = entity.Name,
+                        Title =entity.Title,
+                        Company = entity.Company,
+                        Avatar= entity.Avatar
+                    });             
+
+
         }
+
+      
 
     }
 }

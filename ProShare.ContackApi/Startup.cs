@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Consul;
 using DnsClient;
+using Infrastructure.Filter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
@@ -13,11 +14,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ProShare.ContactApi.Filters;
 using ProShare.ContactApi.Infrastructure;
 using ProShare.ContactApi.Models.Dtos;
 using ProShare.ContactApi.Services;
 using Resilience;
+using ProShare.ContactApi.Data;
 
 namespace ProShare.ContactApi
 {
@@ -88,7 +89,12 @@ namespace ProShare.ContactApi
 
             #endregion
 
+            //服务注入
+            services.AddScoped(typeof(ContactContext));
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IContactApplyRequestRepository, MongoContactApplyRequestRepository>();
+            services.AddScoped<IContactBookRepository, MongoContactBookRepository>();
+        
 
             services.AddMvc(option => {
 

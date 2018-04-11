@@ -8,6 +8,9 @@ using ProShare.ContactApi.Models;
 
 namespace ProShare.ContactApi.Data
 {
+    /// <summary>
+    /// 好友通讯录仓储
+    /// </summary>
     public interface IContactBookRepository
     {
         /// <summary>

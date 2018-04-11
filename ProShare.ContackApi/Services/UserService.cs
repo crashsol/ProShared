@@ -8,6 +8,8 @@ using Microsoft.Extensions.Options;
 using Polly;
 using ProShare.ContactApi.Models.Dtos;
 using Resilience;
+using Newtonsoft;
+using Newtonsoft.Json;
 
 namespace ProShare.ContactApi.Services
 {
@@ -23,7 +25,7 @@ namespace ProShare.ContactApi.Services
         private readonly ILogger<UserService> _ilogger;
 
         //服务请求地址
-        private readonly string QueryAction = "/api/users/get-or-create";
+        private readonly string QueryAction = "/api/users/get-userinfo/";
 
         public UserService(IHttpClient httpClient, IDnsQuery dnsQuery, IOptions<ServiceDiscoveryOptions> option, ILogger<UserService> logger)
         {
@@ -32,34 +34,6 @@ namespace ProShare.ContactApi.Services
             _serviceOption = option.Value ?? throw new ArgumentNullException(nameof(option));
             _ilogger = logger;
 
-        }
-
-
-
-        public async Task<int> GetOrCreateAsync(string phone)
-        {
-            var form = new Dictionary<string, string> { { "phone", phone } };
-
-            try
-            {
-                var queryUrl = await GetApplicateUrlFromConsulAsync();
-                var response = await _httpClient.PostAsync(queryUrl, form);
-                if (response.IsSuccessStatusCode)
-                {
-                    var userId = await response.Content.ReadAsStringAsync();
-                    int.TryParse(userId, out int id);
-                    return id;
-
-                }
-            }
-            catch (Exception ex)
-            {
-                _ilogger.LogError("GetOrCreateAsync 在重试后调用失败", ex.Message + ex.StackTrace);
-                throw;
-            }
-
-
-            return 0;
         }
 
         /// <summary>
@@ -106,7 +80,7 @@ namespace ProShare.ContactApi.Services
 
                 var appUrl1 = await policyWary.ExecuteAsync(async () =>
                 {
-                    var result = await _dnsQuery.ResolveServiceAsync("service.consul", _serviceOption.ServiceName);
+                    var result = await _dnsQuery.ResolveServiceAsync("service.consul", _serviceOption.DisConverServiceName);
                     var addressList = result.First().AddressList;
                     var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName;
                     var port = result.First().Port;
@@ -125,9 +99,14 @@ namespace ProShare.ContactApi.Services
 
 
         }
-        public BaseUserInfo GetBaseUserInfo(int userId)
+        public async Task<BaseUserInfo> GetBaseUserInfoAsync(int userId)
         {
-            throw new NotImplementedException();
+            var userpaiAddress = await GetApplicateUrlFromConsulAsync();
+
+            var result =await _httpClient.GetStringAsync(userpaiAddress + QueryAction + userId);
+
+            return JsonConvert.DeserializeObject<BaseUserInfo>(result);
+
         }
     }
 }

@@ -13,6 +13,6 @@ namespace ProShare.ContactApi.Services
         /// </summary>
         /// <param name="userId">用户ID</param>
         /// <returns></returns>
-        BaseUserInfo GetBaseUserInfo(int userId);
+        Task<BaseUserInfo> GetBaseUserInfoAsync(int userId);
     }
 }

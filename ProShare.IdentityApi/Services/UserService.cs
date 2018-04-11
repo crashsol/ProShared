@@ -24,7 +24,7 @@ namespace ProShare.IdentityApi.Services
         private readonly ILogger<UserService> _ilogger;
 
         //服务请求地址
-        private readonly string QueryAction = "/api/users/get-or-create";
+        private readonly string QueryAction = "/api/users/check-or-create";
 
         public UserService(IHttpClient httpClient, IDnsQuery dnsQuery, IOptions<ServiceDiscoveryOptions> option, ILogger<UserService> logger)
         {
@@ -34,8 +34,6 @@ namespace ProShare.IdentityApi.Services
             _ilogger = logger;
 
         }
-
-
 
         public async Task<int> GetOrCreateAsync(string phone)
         {

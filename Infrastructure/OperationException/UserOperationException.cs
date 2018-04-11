@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProShare.UserApi
+namespace Infrastructure.OperationException
 {
+    /// <summary>
+    /// 用户自定义错误信息
+    /// </summary>
     public class UserOperationException:Exception
     {
 

@@ -7,6 +7,9 @@ using System.Threading;
 
 namespace ProShare.ContactApi.Data
 {
+    /// <summary>
+    /// 好友申请仓储
+    /// </summary>
     public interface IContactApplyRequestRepository
     {
 
