@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProShare.IdentityApi.Models.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,6 @@ namespace ProShare.IdentityApi.Services
         /// </summary>
         /// <param name="phone"></param>
         /// <returns></returns>
-        Task<int> GetOrCreateAsync(string phone);
+        Task<BaseUserInfo> GetOrCreateAsync(string phone);
     }
 }

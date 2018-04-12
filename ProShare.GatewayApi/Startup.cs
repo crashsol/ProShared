@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Consul;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
@@ -18,15 +22,17 @@ namespace ProShare.GatewayApi
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var authenticationProviderKey = "ProShare";         
+            var authenticationProviderKey = "ProShare";
             services.AddAuthentication()
-                .AddIdentityServerAuthentication(authenticationProviderKey, options=>{
+                .AddIdentityServerAuthentication(authenticationProviderKey, options =>
+                {
 
-                    options.Authority = "http://localhost:5001";   //配置IdentityServer 地址
-                    options.ApiName = "gateway_api";                //获取的scope
+                    options.Authority = "http://localhost:5001";   //配置IdentityServer 地址              
                     options.SupportedTokens = SupportedTokens.Both;
-                    options.ApiSecret = "secret";
+                    options.ApiName = "gateway_api";
+                    options.ApiSecret = "secret";                 
                     options.RequireHttpsMetadata = false; //是否启用Https
+                    options.SaveToken = true;
                 });
             //添加Ocelot 依赖注入
             services.AddOcelot();

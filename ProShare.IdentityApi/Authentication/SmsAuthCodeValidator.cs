@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using IdentityServer4.Validation;
 using IdentityServer4.Models;
 using ProShare.IdentityApi.Services;
+using System.Security.Claims;
 
 namespace ProShare.IdentityApi.Authentication
 {
@@ -16,7 +17,7 @@ namespace ProShare.IdentityApi.Authentication
         /// <summary>
         /// 定义授权验证名称
         /// </summary>
-        public string GrantType =>"sms_auth_code";
+        public string GrantType => "sms_auth_code";
 
         private readonly IAuthCodeService _authCodeService;
 
@@ -38,25 +39,34 @@ namespace ProShare.IdentityApi.Authentication
             //授权失败
             var errorValidationResult = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
             //检查手机号和验证码参数是否符合预期
-            if(string.IsNullOrWhiteSpace(phone) || string.IsNullOrWhiteSpace(code))
+            if (string.IsNullOrWhiteSpace(phone) || string.IsNullOrWhiteSpace(code))
             {
                 context.Result = errorValidationResult;
                 return;
             }
             //检查手机号和验证码是否匹配
-            if(!await _authCodeService.Validate(phone,code))
+            if (!await _authCodeService.Validate(phone, code))
             {
                 context.Result = errorValidationResult;
                 return;
             }
-            var userId = await _userService.GetOrCreateAsync(phone);          
-            if(userId <=0)
-            {  
+            var userinfo = await _userService.GetOrCreateAsync(phone);
+            if (userinfo == null)
+            {
                 //如果用户ID小于等于0 ，验证失败
                 context.Result = errorValidationResult;
                 return;
             }
-            context.Result = new GrantValidationResult(userId.ToString(), GrantType);
+            //构建UserClaims
+            var claims = new Claim[]
+            {
+                new Claim("userId",userinfo.UserId.ToString()),
+                new Claim("name",userinfo.Name??string.Empty),
+                new Claim("title",userinfo.Title??string.Empty),
+                new Claim("company",userinfo.Company??string.Empty),
+                new Claim("avatar",userinfo.Avatar??string.Empty)
+            };
+            context.Result = new GrantValidationResult(userinfo.UserId.ToString(),"",claims, GrantType);
         }
     }
 }

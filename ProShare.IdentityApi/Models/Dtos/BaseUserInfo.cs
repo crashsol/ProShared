@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProShare.UserApi.Models.Dtos
+namespace ProShare.IdentityApi.Models.Dtos
 {
-
-    /// <summary>
-    /// 登录用户信息
-    /// </summary>
-    public class UserIdentity
+    public class BaseUserInfo
     {
-
         /// <summary>
         /// 用户ID
         /// </summary>

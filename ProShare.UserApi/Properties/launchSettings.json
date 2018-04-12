@@ -9,17 +9,13 @@
   },
   "profiles": {
     "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "api/users",
+      "commandName": "IISExpress", 
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "ProShare.UserApi": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "api/users",
+      "commandName": "Project",  
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

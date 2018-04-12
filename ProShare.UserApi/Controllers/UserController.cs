@@ -95,7 +95,7 @@ namespace ProShare.UserApi.Controllers
 
 
         /// <summary>
-        /// 检查或则创建用户
+        /// 检查或则创建用户 并返回用户基本信息
         /// </summary>
         /// <param name="phone">手机号码</param>
         /// <returns>用户ID</returns>
@@ -107,12 +107,19 @@ namespace ProShare.UserApi.Controllers
             if (user == null)
             {
                 //用户不存在，直接创建用户
-                user = new AppUser { Phone = phone };
+                user = new AppUser { Phone = phone};
                 await _dbContext.Users.AddAsync(user);
 
                 await _dbContext.SaveChangesAsync();
             }
-            return Ok(user.Id);
+            return Ok(new
+            {
+                UserId = user.Id,
+                user.Name,
+                user.Title,
+                user.Company,
+                user.Avatar
+            });
         }
 
         /// <summary>
@@ -164,25 +171,26 @@ namespace ProShare.UserApi.Controllers
         [Route("get-userinfo/{id}")]
         public async Task<IActionResult> GetUserBaseInfoAsync(int id)
         {
-            var entity =await _dbContext.Users.SingleOrDefaultAsync(b => b.Id == id);
+            var entity = await _dbContext.Users.SingleOrDefaultAsync(b => b.Id == id);
 
             if (entity == null)
             {
                 _logger.LogInformation($"查询用户编号 {id},信息不存在");
                 throw new UserOperationException("用户不存在");
             }
-            return Ok(new{
-                        UserId = entity.Id,
-                        Name = entity.Name,
-                        Title =entity.Title,
-                        Company = entity.Company,
-                        Avatar= entity.Avatar
-                    });             
+            return Ok(new
+            {
+                UserId = entity.Id,
+                entity.Name,
+                entity.Title,
+                entity.Company,
+                entity.Avatar
+            });
 
 
         }
 
-      
+
 
     }
 }

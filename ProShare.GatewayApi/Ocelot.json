@@ -4,16 +4,50 @@
       "DownstreamPathTemplate": "/api/users",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/users",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [ "get", "post" ],
       "ServiceName": "UserApi",
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "ProShare",
-        "AllowedScopes": []
+        "AllowedScopes": [ "user_api" ]
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/users/tags",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/users/tags",
+      "UpstreamHttpMethod": [ "get", "post" ],
+      "ServiceName": "UserApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ProShare",
+        "AllowedScopes": [ "user_api" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/users/get-userinfo/{id}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/users/get-userinfo/{id}",
+      "UpstreamHttpMethod": [ "get" ],
+      "ServiceName": "UserApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ProShare",
+        "AllowedScopes": [ "user_api" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/connect/token",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/token",
+      "UpstreamHttpMethod": [ "post" ],
+      "ServiceName": "IdentityApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true
     }
-
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:5000",

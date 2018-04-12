@@ -10,6 +10,8 @@ using ProShare.IdentityApi.Infrastructure;
 using ProShare.IdentityApi.Models.Dtos;
 using Resilience;
 using Polly;
+using ProShare.IdentityApi.Models.Dto;
+using Newtonsoft.Json;
 
 namespace ProShare.IdentityApi.Services
 {
@@ -35,19 +37,18 @@ namespace ProShare.IdentityApi.Services
 
         }
 
-        public async Task<int> GetOrCreateAsync(string phone)
+        public async Task<BaseUserInfo> GetOrCreateAsync(string phone)
         {
             var form = new Dictionary<string, string> { { "phone", phone } };
-
             try
             {
                 var queryUrl = await GetApplicateUrlFromConsulAsync();
                 var response = await _httpClient.PostAsync(queryUrl, form);
                 if (response.IsSuccessStatusCode)
                 {
-                    var userId = await response.Content.ReadAsStringAsync();
-                    int.TryParse(userId, out int id);
-                    return id;
+                    var userInfo =  JsonConvert.DeserializeObject<BaseUserInfo>(await response.Content.ReadAsStringAsync());
+
+                    return userInfo;
 
                 }
             }
@@ -56,9 +57,7 @@ namespace ProShare.IdentityApi.Services
                 _ilogger.LogError("GetOrCreateAsync 在重试后调用失败", ex.Message + ex.StackTrace);
                 throw;
             }
-
-
-            return 0;
+            return null;
         }
 
         /// <summary>
@@ -105,7 +104,7 @@ namespace ProShare.IdentityApi.Services
 
                 var appUrl1 = await policyWary.ExecuteAsync(async () =>
                   {
-                      var result = await _dnsQuery.ResolveServiceAsync("service.consul", _serviceOption.ServiceName);
+                      var result = await _dnsQuery.ResolveServiceAsync("service.consul", _serviceOption.DisConverServiceName);
                       var addressList = result.First().AddressList;
                       var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName;
                       var port = result.First().Port;

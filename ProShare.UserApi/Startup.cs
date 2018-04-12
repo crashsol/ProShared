@@ -16,6 +16,9 @@ using Consul;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http.Features;
 using Infrastructure.Filter;
+using System.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ProShare.UserApi
 {
@@ -35,6 +38,16 @@ namespace ProShare.UserApi
             {
                 options.UseMySQL(Configuration.GetConnectionString("MysqlUser"));
             });
+
+            //清除默认的JwtToken默认的绑定
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(option =>
+                    {
+                        option.RequireHttpsMetadata = false;
+                        option.Audience = "user_api"; //需要进行验证的 ApiResource
+                        option.Authority = "http://localhost"; 
+                    });
 
             //绑定配置文件
             services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
