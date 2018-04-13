@@ -31,8 +31,7 @@ namespace ProShare.GatewayApi
                     options.SupportedTokens = SupportedTokens.Both;
                     options.ApiName = "gateway_api";
                     options.ApiSecret = "secret";                 
-                    options.RequireHttpsMetadata = false; //是否启用Https
-                    options.SaveToken = true;
+                    options.RequireHttpsMetadata = false; //是否启用Https                  
                 });
             //添加Ocelot 依赖注入
             services.AddOcelot();

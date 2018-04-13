@@ -38,12 +38,11 @@ namespace ProShare.IdentityApi.Services
         }
 
         public async Task<BaseUserInfo> GetOrCreateAsync(string phone)
-        {
-            var form = new Dictionary<string, string> { { "phone", phone } };
+        {           
             try
             {
                 var queryUrl = await GetApplicateUrlFromConsulAsync();
-                var response = await _httpClient.PostAsync(queryUrl, form);
+                var response = await _httpClient.PostAsync(queryUrl, phone);
                 if (response.IsSuccessStatusCode)
                 {
                     var userInfo =  JsonConvert.DeserializeObject<BaseUserInfo>(await response.Content.ReadAsStringAsync());

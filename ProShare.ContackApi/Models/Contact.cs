@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Driver;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace ProShare.ContactApi.Models
 {
     /// <summary>
     /// 好友信息
     /// </summary>
+    /// 
+    [BsonIgnoreExtraElements]
     public class Contact
     {
 

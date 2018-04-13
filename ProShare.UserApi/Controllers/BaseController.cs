@@ -24,7 +24,7 @@ namespace ProShare.UserApi.Controllers
             get
             {
                 var userIdentity = new UserIdentity();
-                userIdentity.UserId = int.Parse(User.Claims.FirstOrDefault(b => b.Type == "userId").Value);
+                userIdentity.UserId = Convert.ToInt16(User.Claims.FirstOrDefault(b => b.Type == "sub").Value);
                 userIdentity.Title = User.Claims.FirstOrDefault(b => b.Type == "title").Value;
                 userIdentity.Company = User.Claims.FirstOrDefault(b => b.Type == "company").Value;
                 userIdentity.Avatar = User.Claims.FirstOrDefault(b => b.Type == "avatar").Value;

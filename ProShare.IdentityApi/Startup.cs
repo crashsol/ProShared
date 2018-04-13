@@ -41,7 +41,8 @@ namespace ProShare.IdentityApi
                 .AddDeveloperSigningCredential()                               
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClients(Config.GetClients())
-                .AddInMemoryIdentityResources(Config.GetIdentityResources());
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                .AddProfileService<UserProfileService>(); //添加自定义UserProfileService
 
 
             //注入Application Service
@@ -67,7 +68,7 @@ namespace ProShare.IdentityApi
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthCodeService, TestAuthCodeService>();
-
+          
 
             //注入IConsulClient 用于向Consul进行注册 
             services.AddSingleton<IConsulClient>(b => new ConsulClient(cfg =>

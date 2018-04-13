@@ -59,14 +59,13 @@ namespace ProShare.IdentityApi.Authentication
             }
             //构建UserClaims
             var claims = new Claim[]
-            {
-                new Claim("userId",userinfo.UserId.ToString()),
+            {             
                 new Claim("name",userinfo.Name??string.Empty),
                 new Claim("title",userinfo.Title??string.Empty),
                 new Claim("company",userinfo.Company??string.Empty),
                 new Claim("avatar",userinfo.Avatar??string.Empty)
             };
-            context.Result = new GrantValidationResult(userinfo.UserId.ToString(),"",claims, GrantType);
+            context.Result = new GrantValidationResult(userinfo.UserId.ToString(), GrantType, claims);
         }
     }
 }

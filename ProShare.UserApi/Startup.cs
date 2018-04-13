@@ -46,7 +46,7 @@ namespace ProShare.UserApi
                     {
                         option.RequireHttpsMetadata = false;
                         option.Audience = "user_api"; //需要进行验证的 ApiResource
-                        option.Authority = "http://localhost"; 
+                        option.Authority = "http://localhost:5000"; 
                     });
 
             //绑定配置文件
@@ -135,6 +135,8 @@ namespace ProShare.UserApi
             });
 
             #endregion
+
+            app.UseAuthentication();
 
             app.UseMvc();
             InitDataBase(app);

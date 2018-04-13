@@ -19,6 +19,9 @@ using ProShare.ContactApi.Models.Dtos;
 using ProShare.ContactApi.Services;
 using Resilience;
 using ProShare.ContactApi.Data;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ProShare.ContactApi
 {
@@ -35,7 +38,22 @@ namespace ProShare.ContactApi
         public void ConfigureServices(IServiceCollection services)
         {
 
+                    
+            //清除默认的JwtToken默认的绑定
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(option =>
+                {
+                    option.RequireHttpsMetadata = false;
+                    option.Audience = "contact_api"; //需要进行验证的ApiResourece
+                    option.Authority = "http://localhost:5000";            //验证的IdentityServer 地址
+                });
+
+
+            //加载MongoDb配置
             services.Configure<AppSetting>(Configuration);
+
+            
 
             #region Consul 服务注册发现配置
           
@@ -113,6 +131,9 @@ namespace ProShare.ContactApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            //启用认证框架，以便将header中的Token进行转换到User中
+            app.UseAuthentication();
 
             #region 向Consul进行服务注册     
 

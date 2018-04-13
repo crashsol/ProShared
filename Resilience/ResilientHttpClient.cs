@@ -107,58 +107,49 @@ namespace Resilience
         }
 
         public Task<HttpResponseMessage> PutAsync<T>(string uri, T item, string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
-        {
-            Func<HttpRequestMessage> func = () => CreateHttpRequestMessage(HttpMethod.Post, uri, item);
-            return DoPostPutAsync(HttpMethod.Post, uri, func, authorizationToken, requestId, authorizationMethod);
+        {           
+            return DoPostPutAsync(HttpMethod.Put, uri, item, authorizationToken, requestId, authorizationMethod);
         }
         public Task<HttpResponseMessage> PostAsync<T>(string uri, T item, string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
         {
-            Func<HttpRequestMessage> func = () => CreateHttpRequestMessage(HttpMethod.Post, uri, item);
-            return DoPostPutAsync(HttpMethod.Post, uri, func, authorizationToken, requestId, authorizationMethod);
+         
+            return DoPostPutAsync(HttpMethod.Post, uri, item, authorizationToken, requestId, authorizationMethod);
         }
 
-        public Task<HttpResponseMessage> PostAsync(string uri, Dictionary<string,string> form, string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
-        {
-            Func<HttpRequestMessage> func = ()=>  CreateHttpRequestMessage(HttpMethod.Post, uri, form);
-            
-            return DoPostPutAsync(HttpMethod.Post, uri, func, authorizationToken, requestId, authorizationMethod);
-        }
+        ///// <summary>
+        ///// 创建HttpRequestMessage  application/json 请求
+        ///// </summary>
+        ///// <typeparam name="T">泛型</typeparam>
+        ///// <param name="method">方法类型</param>
+        ///// <param name="url">链接地址</param>
+        ///// <param name="item">要传递的内容</param>
+        ///// <returns></returns>
+        //private HttpRequestMessage CreateHttpRequestMessage<T>(HttpMethod method,string url,T item)
+        //{
+        //    var httpRequestMessage = new HttpRequestMessage(method, url)
+        //    {
+        //        Content = new StringContent(JsonConvert.SerializeObject(item), System.Text.Encoding.UTF8, "application/json")
+        //    };
+        //    return httpRequestMessage;
+        //}
+
+        ///// <summary>
+        ///// 创建HttpRequestMessage FormUrlEncodedContent 请求
+        ///// </summary>   
+        ///// <param name="method">方法类型</param>
+        ///// <param name="url">链接地址</param>
+        ///// <param name="form">要传递的内容</param>
+        //private HttpRequestMessage CreateHttpRequestMessage(HttpMethod method, string url, Dictionary<string,string> form)
+        //{
+        //    var httpRequestMessage = new HttpRequestMessage(method, url)
+        //    {
+        //        Content = new FormUrlEncodedContent(form)
+        //    };
+        //    return httpRequestMessage;
+        //}
 
 
-        /// <summary>
-        /// 创建HttpRequestMessage  application/json 请求
-        /// </summary>
-        /// <typeparam name="T">泛型</typeparam>
-        /// <param name="method">方法类型</param>
-        /// <param name="url">链接地址</param>
-        /// <param name="item">要传递的内容</param>
-        /// <returns></returns>
-        private HttpRequestMessage CreateHttpRequestMessage<T>(HttpMethod method,string url,T item)
-        {
-            var httpRequestMessage = new HttpRequestMessage(method, url)
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(item), System.Text.Encoding.UTF8, "application/json")
-            };
-            return httpRequestMessage;
-        }
-
-        /// <summary>
-        /// 创建HttpRequestMessage FormUrlEncodedContent 请求
-        /// </summary>   
-        /// <param name="method">方法类型</param>
-        /// <param name="url">链接地址</param>
-        /// <param name="form">要传递的内容</param>
-        private HttpRequestMessage CreateHttpRequestMessage(HttpMethod method, string url, Dictionary<string,string> form)
-        {
-            var httpRequestMessage = new HttpRequestMessage(method, url)
-            {
-                Content = new FormUrlEncodedContent(form)
-            };
-            return httpRequestMessage;
-        }
-
-
-        private Task<HttpResponseMessage> DoPostPutAsync(HttpMethod method, string uri,Func<HttpRequestMessage> requestFunc, string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
+        private Task<HttpResponseMessage> DoPostPutAsync<T>(HttpMethod method, string uri,T item, string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
         {
             if (method != HttpMethod.Post && method != HttpMethod.Put)
             {
@@ -172,7 +163,11 @@ namespace Resilience
             {
 
                 //构建请求
-                var requestMessage = requestFunc();
+                var requestMessage = new HttpRequestMessage(method, uri);
+
+                SetAuthorizationHeader(requestMessage);
+
+                requestMessage.Content = new StringContent(JsonConvert.SerializeObject(item), System.Text.Encoding.UTF8, "application/json");
 
                 //设置请求Header
                 SetAuthorizationHeader(requestMessage);

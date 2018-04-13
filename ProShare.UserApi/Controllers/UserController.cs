@@ -101,7 +101,7 @@ namespace ProShare.UserApi.Controllers
         /// <returns>用户ID</returns>
         [Route("check-or-create")]
         [HttpPost]
-        public async Task<IActionResult> CheckOrCreateUser(string phone)
+        public async Task<IActionResult> CheckOrCreateUser([FromBody]string phone)
         {
             var user = await _dbContext.Users.SingleOrDefaultAsync(b => b.Phone == phone);
             if (user == null)

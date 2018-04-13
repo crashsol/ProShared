@@ -103,7 +103,7 @@ namespace ProShare.ContactApi.Services
         {
             var userpaiAddress = await GetApplicateUrlFromConsulAsync();
 
-            var result =await _httpClient.GetStringAsync(userpaiAddress + QueryAction + userId);
+            var result =await _httpClient.GetStringAsync(userpaiAddress +  userId);
 
             return JsonConvert.DeserializeObject<BaseUserInfo>(result);
 

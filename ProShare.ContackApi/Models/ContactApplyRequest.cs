@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace ProShare.ContactApi.Models
     /// <summary>
     /// 好友申请
     /// </summary>
+    /// 忽略内中不存在的字段 _Id
+    [BsonIgnoreExtraElements]
     public class ContactApplyRequest
     {
         /// <summary>

@@ -17,7 +17,7 @@
       "DownstreamPathTemplate": "/api/users/tags",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/users/tags",
-      "UpstreamHttpMethod": [ "get", "post" ],
+      "UpstreamHttpMethod": [ "get", "put" ],
       "ServiceName": "UserApi",
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
@@ -40,14 +40,76 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/connect/token",
+      "DownstreamPathTemplate": "/connect/{cacheAll}",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/token",
-      "UpstreamHttpMethod": [ "post" ],
+      "UpstreamPathTemplate": "/connect/{cacheAll}",
+      "UpstreamHttpMethod": [ "Post" ],
       "ServiceName": "IdentityApi",
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true
+    },
+    {
+      "DownstreamPathTemplate": "/.well-known/{cacheAll}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/.well-known/{cacheAll}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "IdentityApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/contacts",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/contacts",
+      "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "ContactApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ProShare",
+        "AllowedScopes": [ "contact_api" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/contacts/tag",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/contacts/tag",
+      "UpstreamHttpMethod": [ "put" ],
+      "ServiceName": "ContactApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ProShare",
+        "AllowedScopes": [ "contact_api" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/contacts/apply-requests/{applierId}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/contacts/apply-requests/{applierId}",
+      "UpstreamHttpMethod": [ "put", "post" ],
+      "ServiceName": "ContactApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ProShare",
+        "AllowedScopes": [ "contact_api" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/contacts/apply-requests",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/contacts/apply-requests",
+      "UpstreamHttpMethod": [ "get" ],
+      "ServiceName": "ContactApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ProShare",
+        "AllowedScopes": [ "contact_api" ]
+      }
     }
+
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:5000",

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProShare.UserApi", "ProShare.UserApi\ProShare.UserApi.csproj", "{DE785052-C13C-45E5-ABF9-4517B9F03B7D}"
 EndProject
@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resilience", "Resilience\Re
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProShare.ContactApi", "ProShare.ContackApi\ProShare.ContactApi.csproj", "{FE635B8A-BDE9-4DD2-BFAD-A86B83BB1F3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{600991E2-C55D-495F-8667-1DCED0864C57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{600991E2-C55D-495F-8667-1DCED0864C57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsulExtensions", "ConsulExtensions\ConsulExtensions.csproj", "{1CA37B8C-A4A9-4AAD-A7AD-8BADB4D637AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{600991E2-C55D-495F-8667-1DCED0864C57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{600991E2-C55D-495F-8667-1DCED0864C57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{600991E2-C55D-495F-8667-1DCED0864C57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CA37B8C-A4A9-4AAD-A7AD-8BADB4D637AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CA37B8C-A4A9-4AAD-A7AD-8BADB4D637AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CA37B8C-A4A9-4AAD-A7AD-8BADB4D637AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CA37B8C-A4A9-4AAD-A7AD-8BADB4D637AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{C469D69D-B353-46CE-B8FC-1DE27D78139E} = {132BD2BA-2B8B-47BF-8CCE-055BF87C6719}
 		{FE635B8A-BDE9-4DD2-BFAD-A86B83BB1F3F} = {B5B8D4F8-1FB2-4D4E-8133-C76AE2FCAAEE}
 		{600991E2-C55D-495F-8667-1DCED0864C57} = {132BD2BA-2B8B-47BF-8CCE-055BF87C6719}
+		{1CA37B8C-A4A9-4AAD-A7AD-8BADB4D637AC} = {132BD2BA-2B8B-47BF-8CCE-055BF87C6719}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC13CAEB-1970-42EA-B13B-44315F2DEAEB}

@@ -15,6 +15,7 @@ namespace ProShare.IdentityApi
         public static IEnumerable<ApiResource> GetApiResources()
         {
             return new List<ApiResource>{
+                new ApiResource("gateway_api","gateway service"),
                 new ApiResource("user_api", "user service"),
                 new ApiResource("contact_api","contact service")
                 
@@ -38,6 +39,7 @@ namespace ProShare.IdentityApi
                    //允许访问的 Scope
                    AllowedScopes = new List<string>
                    {
+                       "gateway_api",
                        "user_api",
                        "contact_api",
                        IdentityServerConstants.StandardScopes.OpenId,
