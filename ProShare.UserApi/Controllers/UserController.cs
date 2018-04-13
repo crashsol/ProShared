@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.JsonPatch;
 using ProShare.UserApi.Models;
 using Infrastructure.OperationException;
+using DotNetCore.CAP;
+using ProShare.UserApi.Models.Dtos;
 
 namespace ProShare.UserApi.Controllers
 {
@@ -17,9 +19,33 @@ namespace ProShare.UserApi.Controllers
     {
 
         private readonly UserContext _dbContext;
-        public UserController(ILogger<BaseController> logger, UserContext userContext) : base(logger)
+
+
+        private readonly ICapPublisher _capPublisher; //Cap Publisher
+        public UserController(ILogger<BaseController> logger, UserContext userContext, ICapPublisher capPublisher) : base(logger)
         {
             _dbContext = userContext;
+            _capPublisher = capPublisher;
+        }
+
+        private void RaiseUserProfileChangeEvent(AppUser user)
+        {
+            //判断是否是冗余个人信息修改
+            if (_dbContext.Entry(user).Property(nameof(user.Name)).IsModified ||
+                _dbContext.Entry(user).Property(nameof(user.Title)).IsModified ||
+                _dbContext.Entry(user).Property(nameof(user.Company)).IsModified ||
+                _dbContext.Entry(user).Property(nameof(user.Avatar)).IsModified 
+                )
+            {
+                _capPublisher.Publish("proshare.userapi.userprofilechanged", new UserIdentity
+                {
+                    UserId = user.Id,
+                    Title =user.Title,
+                    Company =user.Company,
+                    Name =user.Name,
+                    Avatar =user.Avatar                    
+                });
+            }
         }
 
         /// <summary>
@@ -85,10 +111,17 @@ namespace ProShare.UserApi.Controllers
                     }
                 }
             }
+           
+            using (var transAction = _dbContext.Database.BeginTransaction())
+            {
 
-            //更新用户信息
-            _dbContext.Users.Update(entity);
-            _dbContext.SaveChanges();
+                //当用户信息进行修改时，发送更新个人属性的消息
+                RaiseUserProfileChangeEvent(entity);
+
+                //更新用户信息
+                _dbContext.Users.Update(entity);
+                _dbContext.SaveChanges();
+            }
 
             return Json(entity);
         }

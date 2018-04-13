@@ -48,17 +48,35 @@ namespace ProShare.UserApi
                     {
                         option.RequireHttpsMetadata = false;
                         option.Audience = "user_api"; //需要进行验证的 ApiResource
-                        option.Authority = "http://localhost:5000"; 
+                        option.Authority = "http://localhost:5000";
                     });
 
 
-         
+            #region Consul服务依赖注入
 
             //绑定配置文件
             services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
 
             //添加Consul服务注册
-            services.AddConsulClient();          
+            services.AddConsulClient();
+
+            #endregion
+
+            #region CAP 依赖注入配置
+
+            services.AddCap(option =>
+            {
+                // 如果你的 SqlServer 使用的 EF 进行数据操作，你需要添加如下配置：
+                // 注意: 你不需要再次配置 x.UseSqlServer(""")
+                option.UseEntityFramework<UserContext>();
+
+                // 如果你使用的 RabbitMQ 作为MQ，你需要添加如下配置：
+                option.UseRabbitMQ(Configuration.GetConnectionString("RabbitMQ"));
+
+            });
+
+
+            #endregion
 
             services.AddMvc(option =>
             {
@@ -80,7 +98,7 @@ namespace ProShare.UserApi
 
 
             //启用Consul 注册和发现
-            app.UseConsul(env, applicationLifetime, consulClient, serviceOptions);           
+            app.UseConsul(env, applicationLifetime, consulClient, serviceOptions);
 
             app.UseAuthentication();
 

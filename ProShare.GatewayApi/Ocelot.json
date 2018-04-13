@@ -4,7 +4,7 @@
       "DownstreamPathTemplate": "/api/users",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/users",
-      "UpstreamHttpMethod": [ "get", "post" ],
+      "UpstreamHttpMethod": [ "Get", "Patch" ],
       "ServiceName": "UserApi",
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
@@ -12,7 +12,7 @@
         "AuthenticationProviderKey": "ProShare",
         "AllowedScopes": [ "user_api" ]
       }
-    },
+    },    
     {
       "DownstreamPathTemplate": "/api/users/tags",
       "DownstreamScheme": "http",

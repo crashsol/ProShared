@@ -12,6 +12,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.JsonPatch;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetCore.CAP;
 
 namespace ProShare.UserApiTest
 {
@@ -48,9 +49,10 @@ namespace ProShare.UserApiTest
             var context = GetUserContext();
             var loggerMoq = new Mock<ILogger<UserController>>();
             var logger = loggerMoq.Object; //获得模拟的logger
+            var cappublish = new Mock<ICapPublisher>();
 
             //模拟创建Controller
-             return (new UserController(logger, context),context);
+             return (new UserController(logger, context, cappublish.Object),context);
 
         }
         [Fact]
