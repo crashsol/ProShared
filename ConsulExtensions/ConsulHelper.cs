@@ -17,20 +17,12 @@ namespace ConsulExtensions
     public static class ConsulHelper
     {
         /// <summary>
-        /// 添加 ConsulClient 服务依赖，并配置ServiceDiscoveryOptions
+        /// 添加 ConsulClient 服务依赖，需提前添加配置ServiceDiscoveryOptions
         /// </summary>
         /// <param name="services"></param>
         /// <param name="optionAction">ServiceDiscoveryOptions 配置信息</param>
-        public static void AddConsulClient(this IServiceCollection services,Action<ServiceDiscoveryOptions> optionAction)
-        {
-            //添加配置文件
-            if (optionAction == null)
-            {
-                throw new ArgumentNullException(nameof(optionAction));
-            }
-            //添加配置信息
-            services.Configure(optionAction);
-
+        public static void AddConsulClient(this IServiceCollection services)
+        {     
             //注入IConsulClient 用于向Consul进行注册 
             services.AddSingleton<IConsulClient>(b => new ConsulClient(cfg =>
             {
@@ -46,7 +38,7 @@ namespace ConsulExtensions
 
 
         /// <summary>
-        /// 添加DnsClient 服务依赖，需要配置 ServiceDiscoveryOptions
+        /// 添加DnsClient 服务依赖，需提前添加配置ServiceDiscoveryOptions
         /// </summary>
         /// <param name="services"></param>
         public static void AddSingletonDnsClient(this IServiceCollection services)

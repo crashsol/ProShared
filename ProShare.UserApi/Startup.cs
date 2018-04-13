@@ -19,6 +19,8 @@ using Infrastructure.Filter;
 using System.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ConsulExtensions;
+using ConsulExtensions.Dtos;
 
 namespace ProShare.UserApi
 {
@@ -49,20 +51,14 @@ namespace ProShare.UserApi
                         option.Authority = "http://localhost:5000"; 
                     });
 
+
+         
+
             //绑定配置文件
             services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
 
-            //注入IConsulClient 用于向Consul进行注册 
-            services.AddSingleton<IConsulClient>(b => new ConsulClient(cfg =>
-            {
-                //从依赖注入中读取 Consul 的配置信息
-                var serviceConfiguration = b.GetRequiredService<IOptions<ServiceDiscoveryOptions>>().Value;
-                if (!string.IsNullOrEmpty(serviceConfiguration.Consul.HttpEndpoint))
-                {
-                    // if not configured, the client will use the default value "127.0.0.1:8500"
-                    cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
-                }
-            }));
+            //添加Consul服务注册
+            services.AddConsulClient();          
 
             services.AddMvc(option =>
             {
@@ -83,58 +79,8 @@ namespace ProShare.UserApi
             }
 
 
-            #region 向Consul进行服务注册     
-
-            //获取服务启动地址绑定信息
-            var features = app.Properties["server.Features"] as FeatureCollection;
-            var addresses = features.Get<IServerAddressesFeature>()
-                .Addresses
-                .Select(p => new Uri(p));
-
-
-            //在服务启动时,向Consul 中心进行注册
-            applicationLifetime.ApplicationStarted.Register(() => {
-
-                foreach (var address in addresses)
-                {
-                    //设定服务Id(全局唯一 unique）
-                    var serviceId = $"{serviceOptions.Value.ServiceName}_{address.Host}:{address.Port}";
-
-                    //设置健康检查方法
-                    var httpCheck = new AgentServiceCheck()
-                    {
-                        DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),  //错误时间超过1分钟，移除
-                        Interval = TimeSpan.FromSeconds(30),                       //30秒检查一下
-                        HTTP = new Uri(address, "HealthCheck").OriginalString
-                    };
-                    //设置Consul中心 配置
-                    var registration = new AgentServiceRegistration()
-                    {
-                        Checks = new[] { httpCheck }, //配置健康检查
-                        Address = address.Host,       //Consul 地址
-                        Port = address.Port,          //Consul 端口
-                        ID = serviceId,               //服务唯一ID
-                        Name = serviceOptions.Value.ServiceName,   //对外服务名称
-
-                    };
-                    //向Consul 中心进行注册
-                    consulClient.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
-
-                }
-            });
-
-            //在程序停止时,向Consul 中心进行注销
-            applicationLifetime.ApplicationStopped.Register(() =>
-            {
-                foreach (var address in addresses)
-                {
-                    //设定服务Id(全局唯一 unique）
-                    var serviceId = $"{serviceOptions.Value.ServiceName}_{address.Host}:{address.Port}";
-                    consulClient.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
-                }
-            });
-
-            #endregion
+            //启用Consul 注册和发现
+            app.UseConsul(env, applicationLifetime, consulClient, serviceOptions);           
 
             app.UseAuthentication();
 

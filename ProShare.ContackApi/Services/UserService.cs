@@ -10,6 +10,7 @@ using ProShare.ContactApi.Models.Dtos;
 using Resilience;
 using Newtonsoft;
 using Newtonsoft.Json;
+using ConsulExtensions.Dtos;
 
 namespace ProShare.ContactApi.Services
 {
@@ -80,7 +81,7 @@ namespace ProShare.ContactApi.Services
 
                 var appUrl1 = await policyWary.ExecuteAsync(async () =>
                 {
-                    var result = await _dnsQuery.ResolveServiceAsync("service.consul", _serviceOption.DisConverServiceName);
+                    var result = await _dnsQuery.ResolveServiceAsync("service.consul", _serviceOption.DiscoverServiceName);
                     var addressList = result.First().AddressList;
                     var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName;
                     var port = result.First().Port;

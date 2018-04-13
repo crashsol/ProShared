@@ -22,6 +22,8 @@ using ProShare.ContactApi.Data;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
+using ConsulExtensions;
+using ConsulExtensions.Dtos;
 
 namespace ProShare.ContactApi
 {
@@ -53,33 +55,11 @@ namespace ProShare.ContactApi
             //加载MongoDb配置
             services.Configure<AppSetting>(Configuration);
 
-            
-
-            #region Consul 服务注册发现配置
-          
-            //添加服务发现
-            //进行配置绑定       
+            ///添加服务发现  进行配置绑定       
             services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
-            services.AddSingleton<IDnsQuery>(b =>
-            {
-                var serviceOption = b.GetRequiredService<IOptions<ServiceDiscoveryOptions>>();
-                //添加Consul服务地址
-                return new LookupClient(serviceOption.Value.Consul.DnsEndpoint.ToIPEndPoint());
-            });
-
-            //注入IConsulClient 用于向Consul进行注册 
-            services.AddSingleton<IConsulClient>(b => new ConsulClient(cfg =>
-            {
-                //从依赖注入中读取 Consul 的配置信息
-                var serviceConfiguration = b.GetRequiredService<IOptions<ServiceDiscoveryOptions>>().Value;
-                if (!string.IsNullOrEmpty(serviceConfiguration.Consul.HttpEndpoint))
-                {
-                    // if not configured, the client will use the default value "127.0.0.1:8500"
-                    cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
-                }
-            }));
-
-            #endregion
+            services.AddConsulClient();
+            services.AddSingletonDnsClient();
+          
 
             #region  IResilientHttp 配置
 
@@ -131,62 +111,12 @@ namespace ProShare.ContactApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseConsul(env, applicationLifetime, consulClient, serviceOptions);
 
             //启用认证框架，以便将header中的Token进行转换到User中
             app.UseAuthentication();
 
-            #region 向Consul进行服务注册     
-
-            //获取服务启动地址绑定信息
-            var features = app.Properties["server.Features"] as FeatureCollection;
-            var addresses = features.Get<IServerAddressesFeature>()
-                .Addresses
-                .Select(p => new Uri(p));
-
-
-            //在服务启动时,向Consul 中心进行注册
-            applicationLifetime.ApplicationStarted.Register(() => {
-
-                foreach (var address in addresses)
-                {
-                    //设定服务Id(全局唯一 unique）
-                    var serviceId = $"{serviceOptions.Value.ServiceName}_{address.Host}:{address.Port}";
-
-                    //设置健康检查方法
-                    var httpCheck = new AgentServiceCheck()
-                    {
-                        DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),  //错误时间超过1分钟，移除
-                        Interval = TimeSpan.FromSeconds(30),                       //30秒检查一下
-                        HTTP = new Uri(address, "HealthCheck").OriginalString
-                    };
-                    //设置Consul中心 配置
-                    var registration = new AgentServiceRegistration()
-                    {
-                        Checks = new[] { httpCheck }, //配置健康检查
-                        Address = address.Host,       //Consul 地址
-                        Port = address.Port,          //Consul 端口
-                        ID = serviceId,               //服务唯一ID
-                        Name = serviceOptions.Value.ServiceName,   //对外服务名称
-
-                    };
-                    //向Consul 中心进行注册
-                    consulClient.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
-
-                }
-            });
-
-            //在程序停止时,向Consul 中心进行注销
-            applicationLifetime.ApplicationStopped.Register(() =>
-            {
-                foreach (var address in addresses)
-                {
-                    //设定服务Id(全局唯一 unique）
-                    var serviceId = $"{serviceOptions.Value.ServiceName}_{address.Host}:{address.Port}";
-                    consulClient.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
-                }
-            });
-
-            #endregion
+         
 
             app.UseMvc();
         }

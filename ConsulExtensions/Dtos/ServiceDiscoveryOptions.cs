@@ -10,17 +10,17 @@ namespace ConsulExtensions.Dtos
     /// </summary>
     public class ServiceDiscoveryOptions
     {
-        public ServiceDiscoveryOptions()
-        {
-            DisConveServiceNames = new List<string>();
-        }
+       
 
         /// <summary>
         /// 注册的服务名称
         /// </summary>
         public string ServiceName { get; set; }
 
-        public List<string> DisConveServiceNames { get; set; }
+        /// <summary>
+        /// 需要发现的服务名称
+        /// </summary>
+        public string DiscoverServiceName { get; set; }
 
         /// <summary>
         /// Consul 节点信息
