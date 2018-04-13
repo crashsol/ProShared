@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using System.Linq;
 using DnsClient;
+using System.Net;
 
 namespace ConsulExtensions
 {
@@ -39,13 +40,13 @@ namespace ConsulExtensions
                 {
                     // if not configured, the client will use the default value "127.0.0.1:8500"
                     cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
-                }
+                }               
             }));
         }
 
 
         /// <summary>
-        /// 添加DnsClient 服务依赖
+        /// 添加DnsClient 服务依赖，需要配置 ServiceDiscoveryOptions
         /// </summary>
         /// <param name="services"></param>
         public static void AddSingletonDnsClient(this IServiceCollection services)
@@ -53,6 +54,10 @@ namespace ConsulExtensions
             services.AddSingleton<IDnsQuery>(b =>
             {
                 var serviceOption = b.GetRequiredService<IOptions<ServiceDiscoveryOptions>>();
+                if(serviceOption.Value ==null)
+                {
+                    return new LookupClient(IPAddress.Parse("127.0.0.1"), 8600);
+                }
                 //添加Consul服务地址
                 return new LookupClient(serviceOption.Value.Consul.DnsEndpoint.ToIPEndPoint());
             });
