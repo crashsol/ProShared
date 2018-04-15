@@ -21,13 +21,19 @@ namespace ProShare.UserApi.Controllers
         private readonly UserContext _dbContext;
 
 
-        private readonly ICapPublisher _capPublisher; //Cap Publisher
+        private readonly ICapPublisher _capPublisher; 
+
+
         public UserController(ILogger<BaseController> logger, UserContext userContext, ICapPublisher capPublisher) : base(logger)
         {
             _dbContext = userContext;
             _capPublisher = capPublisher;
         }
 
+        /// <summary>
+        /// 当用户信息修改后，将修改后的内容使用CAP进行发布，ContactApi接受并处理该信息
+        /// </summary>
+        /// <param name="user"></param>
         private void RaiseUserProfileChangeEvent(AppUser user)
         {
             //判断是否是冗余个人信息修改
@@ -121,6 +127,7 @@ namespace ProShare.UserApi.Controllers
                 //更新用户信息
                 _dbContext.Users.Update(entity);
                 _dbContext.SaveChanges();
+                transAction.Commit();
             }
 
             return Json(entity);

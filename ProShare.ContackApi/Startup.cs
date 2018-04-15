@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
 using ConsulExtensions;
 using ConsulExtensions.Dtos;
+using ProShare.ContactApi.IntergrationEventService;
 
 namespace ProShare.ContactApi
 {
@@ -87,13 +88,50 @@ namespace ProShare.ContactApi
 
             #endregion
 
+
+
+            #region CAP 依赖注入配置
+
+            services.AddCap(option =>
+            {
+                // 如果你的 SqlServer 使用的 EF 进行数据操作，你需要添加如下配置：
+                // 注意: 你不需要再次配置 x.UseSqlServer(""")
+                option.UseMySql(Configuration.GetConnectionString("MysqlUser"));
+
+                // 如果你使用的 RabbitMQ 作为MQ，你需要添加如下配置：
+                option.UseRabbitMQ(Configuration.GetConnectionString("RabbitMQ"));
+
+                ////启用CAP ui
+                //option.UseDashboard();
+
+                ////向Consul 进行注册 register
+                //option.UseDiscovery(d =>
+                //{
+                //    d.DiscoveryServerHostName = "localhost";
+                //    d.DiscoveryServerPort = 8500;
+                //    d.CurrentNodeHostName = "localhost_contactapi";
+                //    d.CurrentNodePort = 5003;
+                //    d.NodeId = 2;
+                //    d.NodeName = "CAP No.2 Node";
+
+                //});
+
+            });
+            //CAP UserinfoChanege Service     
+            //services.AddScoped<IUserinfoChangeSubscriberService, UserinfoChangeSubscriberService>();
+
+
+            #endregion
+
             //服务注入
             services.AddScoped(typeof(ContactContext));
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IContactApplyRequestRepository, MongoContactApplyRequestRepository>();
             services.AddScoped<IContactBookRepository, MongoContactBookRepository>();
-        
 
+         
+
+  
             services.AddMvc(option => {
 
                 option.Filters.Add(typeof(GlobalExceptionFilter));
@@ -112,6 +150,8 @@ namespace ProShare.ContactApi
                 app.UseDeveloperExceptionPage();
             }
             app.UseConsul(env, applicationLifetime, consulClient, serviceOptions);
+
+            app.UseCap();
 
             //启用认证框架，以便将header中的Token进行转换到User中
             app.UseAuthentication();

@@ -73,6 +73,21 @@ namespace ProShare.UserApi
                 // 如果你使用的 RabbitMQ 作为MQ，你需要添加如下配置：
                 option.UseRabbitMQ(Configuration.GetConnectionString("RabbitMQ"));
 
+                //启用CAP ui
+                option.UseDashboard();
+
+                //向Consul 进行注册 register
+                option.UseDiscovery(d =>
+                {
+                    d.DiscoveryServerHostName = "localhost";
+                    d.DiscoveryServerPort = 8500;
+                    d.CurrentNodeHostName = "localhost";
+                    d.CurrentNodePort = 5800;
+                    d.NodeId = 1;
+                    d.NodeName = "CAP No.1 Node";
+
+                });
+
             });
 
 
@@ -101,6 +116,9 @@ namespace ProShare.UserApi
             app.UseConsul(env, applicationLifetime, consulClient, serviceOptions);
 
             app.UseAuthentication();
+
+            //启用cap
+            app.UseCap();
 
             app.UseMvc();
             InitDataBase(app);

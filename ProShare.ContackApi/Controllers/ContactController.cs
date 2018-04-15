@@ -11,6 +11,8 @@ using System.Threading;
 using ProShare.ContactApi.Models.VModels;
 using Infrastructure.OperationException;
 using ProShare.ContactApi.Models.Dtos;
+using DotNetCore.CAP;
+using ProShare.ContactApi.IntergrationEventService;
 
 namespace ProShare.ContactApi.Controllers
 {
@@ -47,6 +49,31 @@ namespace ProShare.ContactApi.Controllers
         {
             return Ok(await _contactBookRepository.GetContactsAsync(UserIdentity.UserId, cancellationToken));
 
+        }
+
+        [NonAction]
+        [CapSubscribe("proshare.userapi.userprofilechanged")]
+        public async Task ChangeUserinfoAsync(UserInfoChangeEventModel eventModel)
+        {
+
+            _logger.LogInformation($"时间:{DateTime.Now }  收到用户 {eventModel.Name} 修改信息事件");
+            var result = await _contactBookRepository.UpdateUserInfoAsync(new BaseUserInfo
+            {
+                UserId = eventModel.UserId,
+                Name = eventModel.Name,
+                Title = eventModel.Title,
+                Company = eventModel.Company,
+                Avatar = eventModel.Avatar
+
+            }, new CancellationToken());
+            if (result)
+            {
+                _logger.LogInformation($"更新用户信息成功");
+            }
+            else
+            {
+                _logger.LogInformation($"更新用户信息失败");
+            }
         }
 
 
