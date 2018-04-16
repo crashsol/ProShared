@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DotNetCore.CAP;
 using Microsoft.Extensions.Logging;
 using ProShare.ContactApi.Data;
+using ProShare.ContactApi.IntergrationEventService.Dtos;
 using ProShare.ContactApi.Models.Dtos;
 
 namespace ProShare.ContactApi.IntergrationEventService
@@ -32,16 +33,24 @@ namespace ProShare.ContactApi.IntergrationEventService
 
             _logger.LogInformation($"时间:{DateTime.Now }  收到用户 {eventModel.Name} 修改信息事件");
             Console.WriteLine($"时间:{DateTime.Now }  收到用户 {eventModel.Name} 修改信息事件");
-            await _contactBookRepository.UpdateUserInfoAsync(new BaseUserInfo {
-                UserId =eventModel.UserId,
-                Name =eventModel.Name,
-                Title =eventModel.Title,
-                Company=eventModel.Company,
-                Avatar =eventModel.Avatar
+            var result = await _contactBookRepository.UpdateUserInfoAsync(new BaseUserInfo
+            {
+                UserId = eventModel.UserId,
+                Name = eventModel.Name,
+                Title = eventModel.Title,
+                Company = eventModel.Company,
+                Avatar = eventModel.Avatar
 
             }, new CancellationToken());
-            Console.WriteLine("更新用户信息成功");
-            _logger.LogInformation($"更新用户信息成功");
+            if (result)
+            {
+                _logger.LogInformation($"更新用户信息成功");
+            }
+            else
+            {
+                _logger.LogInformation($"更新用户信息失败");
+            }
+            Console.WriteLine("更新用户信息成功");         
         }
     }
 }

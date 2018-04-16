@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProShare.ContactApi.IntergrationEventService
+namespace ProShare.ContactApi.IntergrationEventService.Dtos
 {
     /// <summary>
     /// 用户修改消息接受类

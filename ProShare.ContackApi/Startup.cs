@@ -92,6 +92,9 @@ namespace ProShare.ContactApi
 
             #region CAP 依赖注入配置
 
+            //CAP UserinfoChanege Service     
+            services.AddTransient<IUserinfoChangeSubscriberService, UserinfoChangeSubscriberService>();
+
             services.AddCap(option =>
             {
                 // 如果你的 SqlServer 使用的 EF 进行数据操作，你需要添加如下配置：
@@ -101,24 +104,23 @@ namespace ProShare.ContactApi
                 // 如果你使用的 RabbitMQ 作为MQ，你需要添加如下配置：
                 option.UseRabbitMQ(Configuration.GetConnectionString("RabbitMQ"));
 
-                ////启用CAP ui
-                //option.UseDashboard();
+                //启用CAP ui
+                option.UseDashboard();
 
-                ////向Consul 进行注册 register
-                //option.UseDiscovery(d =>
-                //{
-                //    d.DiscoveryServerHostName = "localhost";
-                //    d.DiscoveryServerPort = 8500;
-                //    d.CurrentNodeHostName = "localhost_contactapi";
-                //    d.CurrentNodePort = 5003;
-                //    d.NodeId = 2;
-                //    d.NodeName = "CAP No.2 Node";
+                //向Consul 进行注册 register
+                option.UseDiscovery(d =>
+                {
+                    d.DiscoveryServerHostName = "localhost";
+                    d.DiscoveryServerPort = 8500;
+                    d.CurrentNodeHostName = "localhost_contactapi";
+                    d.CurrentNodePort = 5003;
+                    d.NodeId = 2;
+                    d.NodeName = "CAP No.2 Node";
 
-                //});
+                });
 
             });
-            //CAP UserinfoChanege Service     
-            //services.AddScoped<IUserinfoChangeSubscriberService, UserinfoChangeSubscriberService>();
+          
 
 
             #endregion
