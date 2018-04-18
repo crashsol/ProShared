@@ -52,14 +52,11 @@ namespace ProShare.UserApi
                     });
 
 
-            #region Consul服务依赖注入
-
-            //绑定配置文件
-            services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
+            #region Consul服务依赖注入          
 
             //添加Consul服务注册
-            services.AddConsulClient();
-
+            services.AddConsulClient(Configuration)
+                    .AddDnsClient();
             #endregion
 
             #region CAP 依赖注入配置
@@ -101,10 +98,7 @@ namespace ProShare.UserApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-                IApplicationLifetime applicationLifetime,
-                IConsulClient consulClient,
-                IOptions<ServiceDiscoveryOptions> serviceOptions)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -113,7 +107,7 @@ namespace ProShare.UserApi
 
 
             //启用Consul 注册和发现
-            app.UseConsul(env, applicationLifetime, consulClient, serviceOptions);
+            app.UseConsul();
 
             app.UseAuthentication();
 

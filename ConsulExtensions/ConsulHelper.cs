@@ -21,8 +21,11 @@ namespace ConsulExtensions
         /// </summary>
         /// <param name="services"></param>
         /// <param name="optionAction">ServiceDiscoveryOptions 配置信息</param>
-        public static void AddConsulClient(this IServiceCollection services)
-        {     
+        public static IServiceCollection AddConsulClient(this IServiceCollection services,IConfiguration configuration)
+        {
+            //添加配置文件注入
+            services.Configure<ServiceDiscoveryOptions>(configuration.GetSection("ServiceDiscovery"));
+            
             //注入IConsulClient 用于向Consul进行注册 
             services.AddSingleton<IConsulClient>(b => new ConsulClient(cfg =>
             {
@@ -34,6 +37,28 @@ namespace ConsulExtensions
                     cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
                 }               
             }));
+            return services;
+        }
+
+        public static IServiceCollection AddConsulClient(this IServiceCollection services, Action<ServiceDiscoveryOptions> optionAction)
+        {
+            //添加配置文件注入
+            if (optionAction == null) throw new ArgumentNullException(nameof(optionAction));
+
+            services.Configure(optionAction);
+
+            //注入IConsulClient 用于向Consul进行注册 
+            services.AddSingleton<IConsulClient>(b => new ConsulClient(cfg =>
+            {
+                //从依赖注入中读取 Consul 的配置信息
+                var serviceConfiguration = b.GetRequiredService<IOptions<ServiceDiscoveryOptions>>().Value;
+                if (!string.IsNullOrEmpty(serviceConfiguration.Consul.HttpEndpoint))
+                {
+                    // if not configured, the client will use the default value "127.0.0.1:8500"
+                    cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
+                }
+            }));
+            return services;
         }
 
 
@@ -41,7 +66,7 @@ namespace ConsulExtensions
         /// 添加DnsClient 服务依赖，需提前添加配置ServiceDiscoveryOptions
         /// </summary>
         /// <param name="services"></param>
-        public static void AddSingletonDnsClient(this IServiceCollection services)
+        public static void AddDnsClient(this IServiceCollection services)
         {
             services.AddSingleton<IDnsQuery>(b =>
             {
@@ -63,13 +88,22 @@ namespace ConsulExtensions
         /// <param name="applicationLifetime"></param>
         /// <param name="consulClient"></param>
         /// <param name="serviceOptions"></param>
-        public static void UseConsul(this IApplicationBuilder app, IHostingEnvironment env,
-                IApplicationLifetime applicationLifetime,
-                IConsulClient consulClient,
-                IOptions<ServiceDiscoveryOptions> serviceOptions)
+        public static IApplicationBuilder UseConsul(this IApplicationBuilder app)
         {
-
             #region 向Consul进行服务注册     
+
+            var applicationLife = app.ApplicationServices.GetService<IApplicationLifetime>();
+            if (applicationLife == null) throw new ArgumentNullException(nameof(applicationLife));
+
+            var consulClient = app.ApplicationServices.GetService<IConsulClient>();
+            if (consulClient == null) throw new ArgumentNullException(nameof(consulClient));
+
+            var serviceOptions = app.ApplicationServices.GetRequiredService<IOptions<ServiceDiscoveryOptions>>();
+            if (serviceOptions == null) throw new ArgumentNullException(nameof(serviceOptions));
+
+            var env = app.ApplicationServices.GetRequiredService<IHostingEnvironment>();
+            if (env == null) throw new ArgumentNullException(nameof(env));
+
 
             //获取服务启动地址绑定信息
             var features = app.Properties["server.Features"] as FeatureCollection;
@@ -79,7 +113,7 @@ namespace ConsulExtensions
 
 
             //在服务启动时,向Consul 中心进行注册
-            applicationLifetime.ApplicationStarted.Register(() => {
+            applicationLife.ApplicationStarted.Register(() => {
 
                 foreach (var address in addresses)
                 {
@@ -110,7 +144,7 @@ namespace ConsulExtensions
             });
 
             //在程序停止时,向Consul 中心进行注销
-            applicationLifetime.ApplicationStopped.Register(() =>
+            applicationLife.ApplicationStopped.Register(() =>
             {
                 foreach (var address in addresses)
                 {
@@ -120,6 +154,7 @@ namespace ConsulExtensions
                 }
             });
 
+            return app;
             #endregion
         }
     }

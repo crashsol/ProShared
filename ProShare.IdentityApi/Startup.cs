@@ -71,10 +71,10 @@ namespace ProShare.IdentityApi
             services.AddScoped<IAuthCodeService, TestAuthCodeService>();
 
 
-            ///添加服务发现  进行配置绑定       
-            services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
-            services.AddConsulClient();
-            services.AddSingletonDnsClient();
+            ///添加服务发现  进行配置绑定             
+            services.AddConsulClient(Configuration)
+                    .AddDnsClient();
+      
 
         
 
@@ -83,9 +83,7 @@ namespace ProShare.IdentityApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,IApplicationLifetime applicationLifetime,
-                IConsulClient consulClient,
-                IOptions<ServiceDiscoveryOptions> serviceOptions)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -93,7 +91,7 @@ namespace ProShare.IdentityApi
             }
 
             //启用服务注册于发现
-            app.UseConsul(env, applicationLifetime, consulClient, serviceOptions);
+            app.UseConsul();
 
             app.UseIdentityServer();
 

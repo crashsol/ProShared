@@ -56,10 +56,9 @@ namespace ProShare.ContactApi
             //加载MongoDb配置
             services.Configure<AppSetting>(Configuration);
 
-            ///添加服务发现  进行配置绑定       
-            services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
-            services.AddConsulClient();
-            services.AddSingletonDnsClient();
+            ///添加服务发现  进行配置绑定    
+            services.AddConsulClient(Configuration)
+                    .AddDnsClient();         
           
 
             #region  IResilientHttp 配置
@@ -87,8 +86,6 @@ namespace ProShare.ContactApi
             services.AddSingleton<IHttpClient, ResilientHttpClient>(sp => sp.GetService<IResilientHttpClientFactory>().CreateResilientHttpClient());
 
             #endregion
-
-
 
             #region CAP 依赖注入配置
 
@@ -129,11 +126,7 @@ namespace ProShare.ContactApi
             services.AddScoped(typeof(ContactContext));
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IContactApplyRequestRepository, MongoContactApplyRequestRepository>();
-            services.AddScoped<IContactBookRepository, MongoContactBookRepository>();
-
-         
-
-  
+            services.AddScoped<IContactBookRepository, MongoContactBookRepository>();  
             services.AddMvc(option => {
 
                 option.Filters.Add(typeof(GlobalExceptionFilter));
@@ -151,7 +144,7 @@ namespace ProShare.ContactApi
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseConsul(env, applicationLifetime, consulClient, serviceOptions);
+            app.UseConsul();
 
             app.UseCap();
 
