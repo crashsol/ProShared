@@ -21,10 +21,10 @@ namespace ConsulExtensions
         /// </summary>
         /// <param name="services"></param>
         /// <param name="optionAction">ServiceDiscoveryOptions 配置信息</param>
-        public static IServiceCollection AddConsulClient(this IServiceCollection services,IConfiguration configuration)
+        public static IServiceCollection AddConsulClient(this IServiceCollection services,IConfigurationSection configurationSection)
         {
             //添加配置文件注入
-            services.Configure<ServiceDiscoveryOptions>(configuration.GetSection("ServiceDiscovery"));
+            services.Configure<ServiceDiscoveryOptions>(configurationSection);
             
             //注入IConsulClient 用于向Consul进行注册 
             services.AddSingleton<IConsulClient>(b => new ConsulClient(cfg =>

@@ -57,7 +57,7 @@ namespace ProShare.ContactApi
             services.Configure<AppSetting>(Configuration);
 
             ///添加服务发现  进行配置绑定    
-            services.AddConsulClient(Configuration)
+            services.AddConsulClient(Configuration.GetSection("ServiceDiscovery"))
                     .AddDnsClient();         
           
 
@@ -135,10 +135,7 @@ namespace ProShare.ContactApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-               IApplicationLifetime applicationLifetime,
-               IConsulClient consulClient,
-               IOptions<ServiceDiscoveryOptions> serviceOptions)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {

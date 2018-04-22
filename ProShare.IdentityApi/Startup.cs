@@ -72,7 +72,7 @@ namespace ProShare.IdentityApi
 
 
             ///添加服务发现  进行配置绑定             
-            services.AddConsulClient(Configuration)
+            services.AddConsulClient(Configuration.GetSection("ServiceDiscovery"))
                     .AddDnsClient();
       
 

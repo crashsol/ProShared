@@ -55,7 +55,7 @@ namespace ProShare.UserApi
             #region Consul服务依赖注入          
 
             //添加Consul服务注册
-            services.AddConsulClient(Configuration)
+            services.AddConsulClient(Configuration.GetSection("ServiceDiscovery"))
                     .AddDnsClient();
             #endregion
 
