@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Application\Commands\" />
+    <Folder Include="Application\Queries\" />
+    <Folder Include="Application\DomainEventHandlers\" />
+    <Folder Include="Application\Services\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

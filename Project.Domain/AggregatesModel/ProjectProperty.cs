@@ -9,17 +9,29 @@ namespace Project.Domain.AggregatesModel
     /// <summary>
     /// 项目属性
     /// </summary>
-    public class ProjectProperty:Entity
+    public class ProjectProperty : ValueObject
     {
-        /// <summary>
-        /// 关联用户ID
-        /// </summary>
-        public int ProjectId { get; set; }
-
         public string Key { get; set; }
 
         public string Value { get; set; }
 
         public string Text { get; set; }
+        public ProjectProperty() { }
+
+        public ProjectProperty(string key, string value, string text)
+        {
+            Key = key;
+            Value = value;
+            Text = text;
+        }
+
+        protected override IEnumerable<object> GetAtomicValues()
+        {
+            yield return Key;
+            yield return Value;
+            yield return Text;
+        }
+
+
     }
 }

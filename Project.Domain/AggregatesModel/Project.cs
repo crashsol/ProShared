@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Project.Domain.SeedWork;
+using System.Linq;
+using Project.Domain.Events;
 
 namespace Project.Domain.AggregatesModel
 {
@@ -47,15 +49,15 @@ namespace Project.Domain.AggregatesModel
         /// <summary>
         /// 公司所在省份编号
         /// </summary>
-        public string ProvinceId { get; set; }
+        public int ProvinceId { get; set; }
 
         public string ProvinceName { get; set; }
 
-        public string CityId { get; set; }
+        public int CityId { get; set; }
 
         public string CityName { get; set; }
 
-        public string AreaId { get; set; }
+        public int  AreaId { get; set; }
 
         public string AreaName { get; set; }
 
@@ -168,7 +170,7 @@ namespace Project.Domain.AggregatesModel
         public DateTime CreatedTime { get; set; }
 
 
-        public Project CloneProject(Project source = null)
+        private Project CloneProject(Project source = null)
         {
             if (source == null)
                 source = this;
@@ -210,15 +212,22 @@ namespace Project.Domain.AggregatesModel
             newProject.Properties = new List<ProjectProperty> { };
             foreach (var item in source.Properties)
             {
-                newProject.Properties.Add(new ProjectProperty {
-                    Key = item.Key,
-                    Value =item.Value,
-                    Text =item.Text 
-                });
+                newProject.Properties.Add(new ProjectProperty (
+                  item.Key,
+                  item.Value,
+                  item.Text 
+                ));
             }          
             return newProject;
         }
 
+
+        /// <summary>
+        /// 拷贝项目信息
+        /// </summary>
+        /// <param name="contributorId">贡献者</param>
+        /// <param name="source">项目</param>
+        /// <returns></returns>
         public Project ContributorFork(int contributorId,Project source =null)
         {
             if (source == null)
@@ -231,6 +240,56 @@ namespace Project.Domain.AggregatesModel
             return newproject;
         }
 
+
+
+        public Project()
+        {
+            Viewers = new List<ProjectViewer>();
+          
+            Contributors = new List<ProjectContributor>();
+
+            //添加项目创建事件
+            AddDomainEvent(new ProjectCreatedEvent { Project = this });
+        }
+        /// <summary>
+        /// 添加项目查看者
+        /// </summary>
+        public void AddViewer(int userId,string userName,string avator)
+        {
+            var viewer = new ProjectViewer() {
+                UserId = userId,
+                UserName = userName,
+                Avatar = avator,
+                CreatedTime = DateTime.Now
+                
+            };
+
+            //如果不在查看列表中，需添加
+            if(!Viewers.Any(b =>b.UserId ==userId))
+            {
+                Viewers.Add(viewer);
+
+                //添加查看项目
+                AddDomainEvent(new ProjectViewedEvent { ProjectViewer = viewer });
+            }
+
+        }
+
+        /// <summary>
+        /// 添加项目贡献者
+        /// </summary>
+        /// <param name="projectContributor"></param>
+        public void AddContributor(ProjectContributor projectContributor)
+        {
+            //如果不在查看列表中，需添加
+            if (!Contributors.Any(b => b.UserId == projectContributor.UserId))
+            {
+                Contributors.Add(projectContributor);
+
+                //添加 参与项目事件
+                AddDomainEvent(new ProjectJoinEvent { ProjectContributor = projectContributor });
+            }
+        }
        
     }
 }

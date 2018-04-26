@@ -57,7 +57,7 @@ namespace Project.Domain.SeedWork
         /// <summary>
         /// 清空领域事件
         /// </summary>
-        public void ClearDomainEvent()
+        public void ClearDomainEvents()
         {
             _domainEvents?.Clear();
         }
