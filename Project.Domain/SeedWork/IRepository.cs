@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Project.Domain.SeedWork
 {
-    public interface IRepository<T> where T : IAggregateRoot
+    public interface IProjectRepository<T> where T : IAggregateRoot
     {
         IUnitOfWork UnitOfWork { get; }
     }

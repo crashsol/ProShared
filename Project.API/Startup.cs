@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MediatR;
+using ConsulExtensions;
+using Infrastructure.Filter;
 
 namespace Project.API
 {
@@ -23,7 +26,16 @@ namespace Project.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+
+            //添加Consul服务注入
+            services.AddConsulClient(Configuration.GetSection("ServiceDiscovery"))
+                    .AddDnsClient();
+
+            //添加MeditatR注入
+            services.AddMediatR();
+            services.AddMvc(option => {
+                option.Filters.Add(typeof(GlobalExceptionFilter));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,7 +45,8 @@ namespace Project.API
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            //启用服务注册
+            app.UseConsul();
             app.UseMvc();
         }
     }

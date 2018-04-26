@@ -6,7 +6,7 @@ using Project.Domain.SeedWork;
 
 namespace Project.Domain.AggregatesModel
 {
-    public interface IProjectRepository:IRepository<Project>
+    public interface IProjectRepository:IProjectRepository<Project>
     {
         Task<Project> GetAsync(int id);
         Task<Project> AddAsync(Project project);

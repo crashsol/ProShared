@@ -19,6 +19,7 @@ namespace Project.API
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseUrls("http://localhost:5004")
                 .UseStartup<Startup>()
                 .Build();
     }

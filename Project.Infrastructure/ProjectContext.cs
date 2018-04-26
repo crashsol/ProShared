@@ -5,14 +5,36 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-
+using MediatR;
+using Project.Infrastructure.EntityConfigurations;
 namespace Project.Infrastructure
 {
     public class ProjectContext : DbContext, IUnitOfWork
     {
-        public Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        private IMediator _mediatR;
+
+        public DbSet<Domain.AggregatesModel.Project> Projects { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+            modelBuilder.ApplyConfiguration(new ProjectEntityConfiguration());            
+            modelBuilder.ApplyConfiguration(new ProjectContributorEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectViewerEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectPropertyEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectVisibleRuleEntityConfiguration());
+
+        }
+
+        public ProjectContext(DbContextOptions<ProjectContext> options, IMediator mediator) : base(options)
+        {
+            _mediatR = mediator;
+        }
+        public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await _mediatR.DispatchDomainEventsAsync(this);
+            await base.SaveChangesAsync();
+            return true;         
         }
     }
 }
