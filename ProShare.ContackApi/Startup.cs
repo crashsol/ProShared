@@ -111,7 +111,7 @@ namespace ProShare.ContactApi
                     d.DiscoveryServerPort = 8500;
                     d.CurrentNodeHostName = "localhost_contactapi";
                     d.CurrentNodePort = 5003;
-                    d.NodeId = 2;
+                    d.NodeId = 3;
                     d.NodeName = "CAP Contact API Node";
 
                 });

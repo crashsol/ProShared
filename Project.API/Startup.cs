@@ -20,6 +20,7 @@ using Project.API.Application.Queries;
 using Project.API.Application.Services;
 using Project.Domain.AggregatesModel;
 using Project.Infrastructure.Repositorys;
+using DotNetCore.CAP;
 
 namespace Project.API
 {
@@ -65,6 +66,37 @@ namespace Project.API
 
             //添加MeditatR注入
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
+
+            #region CAP 依赖注入配置
+
+            services.AddCap(option =>
+            {
+                // 如果你的 SqlServer 使用的 EF 进行数据操作，你需要添加如下配置：
+                // 注意: 你不需要再次配置 x.UseSqlServer(""")
+                option.UseEntityFramework<ProjectContext>();
+
+                // 如果你使用的 RabbitMQ 作为MQ，你需要添加如下配置：
+                option.UseRabbitMQ(Configuration.GetConnectionString("RabbitMQ"));
+
+                //启用CAP ui
+                option.UseDashboard();
+
+                //向Consul 进行注册 register
+                option.UseDiscovery(d =>
+                {
+                    d.DiscoveryServerHostName = "localhost";
+                    d.DiscoveryServerPort = 8500;
+                    d.CurrentNodeHostName = "localhost";
+                    d.CurrentNodePort = 5004;
+                    d.NodeId = 4;
+                    d.NodeName = "CAP Project API Node";
+
+                });
+
+            });
+
+            #endregion
+
             services.AddMvc(option =>
             {
                 option.Filters.Add(typeof(GlobalExceptionFilter));
@@ -80,6 +112,8 @@ namespace Project.API
             }
             //启用服务注册
             app.UseConsul();
+            //使用CAP
+            app.UseCap();
 
             //启用Authentication
             app.UseAuthentication();

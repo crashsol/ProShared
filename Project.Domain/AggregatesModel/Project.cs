@@ -275,6 +275,7 @@ namespace Project.Domain.AggregatesModel
                 {  
                     Company =this.Company,
                     Introduction =this.Introduction,
+                    Avatar = this.Avatar,
                     ProjectViewer = viewer
                 });
             }
@@ -296,6 +297,7 @@ namespace Project.Domain.AggregatesModel
                 AddDomainEvent(new ProjectJoinEvent {
                     Company =this.Company,
                     Introduction =this.Introduction,
+                    Avatar =this.Avatar,
                     ProjectContributor = projectContributor
                 });
             }

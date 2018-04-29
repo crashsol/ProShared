@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Application\IngergrationEvents\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

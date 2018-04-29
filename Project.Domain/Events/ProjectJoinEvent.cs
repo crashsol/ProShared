@@ -20,6 +20,8 @@ namespace Project.Domain.Events
 
         public string Introduction { get; set; }
 
+        public string Avatar { get; set; }
+
 
         public ProjectContributor ProjectContributor { get; set; }
     }
