@@ -12,7 +12,7 @@
         "AuthenticationProviderKey": "ProShare",
         "AllowedScopes": [ "user_api" ]
       }
-    },    
+    },
     {
       "DownstreamPathTemplate": "/api/users/tags",
       "DownstreamScheme": "http",
@@ -107,6 +107,71 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "ProShare",
         "AllowedScopes": [ "contact_api" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/projects",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/project",
+      "UpstreamHttpMethod": [ "get", "post" ],
+      "ServiceName": "ProjectApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ProShare",
+        "AllowedScopes": [ "project_api" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/projects/my/{projectId}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/project/my/{projectId}",
+      "UpstreamHttpMethod": [ "get" ],
+      "ServiceName": "ProjectApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ProShare",
+        "AllowedScopes": [ "project_api" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/projects/recommends/{projectId}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/project/recommends/{projectId}",
+      "UpstreamHttpMethod": [ "get" ],
+      "ServiceName": "ProjectApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ProShare",
+        "AllowedScopes": [ "project_api" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/projects/view/{projectId}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/project/view/{projectId}",
+      "UpstreamHttpMethod": [ "put" ],
+      "ServiceName": "ProjectApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ProShare",
+        "AllowedScopes": [ "project_api" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/projects/join/{projectId}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/project/join/{projectId}",
+      "UpstreamHttpMethod": [ "put" ],
+      "ServiceName": "ProjectApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ProShare",
+        "AllowedScopes": [ "project_api" ]
       }
     }
 

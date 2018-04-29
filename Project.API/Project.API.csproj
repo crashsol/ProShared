@@ -5,16 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Queries\" />
-    <Folder Include="Application\DomainEventHandlers\" />
-    <Folder Include="Application\Services\" />
+    <Folder Include="Application\IngergrationEvents\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.4" />
+    <PackageReference Include="DotNetCore.CAP" Version="2.2.2" />
+    <PackageReference Include="DotNetCore.CAP.MySql" Version="2.2.2" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.2.2" />
     <PackageReference Include="MediatR" Version="4.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="4.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.11" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +28,8 @@
     <ProjectReference Include="..\ConsulExtensions\ConsulExtensions.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\Project.Domain\Project.Domain.csproj" />
+    <ProjectReference Include="..\Project.Infrastructure\Project.Infrastructure.csproj" />
+    <ProjectReference Include="..\Resilience\Resilience.csproj" />
   </ItemGroup>
 
 </Project>

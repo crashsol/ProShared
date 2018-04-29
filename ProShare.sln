@@ -26,12 +26,15 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsulExtensions", "ConsulExtensions\ConsulExtensions.csproj", "{1CA37B8C-A4A9-4AAD-A7AD-8BADB4D637AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project", "Project", "{5D1E1255-9B9D-441F-AB20-A11EB1979623}"
+	ProjectSection(SolutionItems) = preProject
+		重点说明.txt = 重点说明.txt
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.API", "Project.API\Project.API.csproj", "{F5219B4A-3A1A-43A3-8343-526CCC78A185}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.API", "Project.API\Project.API.csproj", "{F5219B4A-3A1A-43A3-8343-526CCC78A185}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Domain", "Project.Domain\Project.Domain.csproj", "{A270656D-5130-4DA5-94E5-5806A1ED68CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Domain", "Project.Domain\Project.Domain.csproj", "{A270656D-5130-4DA5-94E5-5806A1ED68CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Infrastructure", "Project.Infrastructure\Project.Infrastructure.csproj", "{3E886121-0995-4C5A-9A3A-DB07F4D81264}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Infrastructure", "Project.Infrastructure\Project.Infrastructure.csproj", "{3E886121-0995-4C5A-9A3A-DB07F4D81264}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

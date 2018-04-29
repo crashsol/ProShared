@@ -1,0 +1,2 @@
+1、Project 在Create ,view,join 时抛出领域事件 =》  Project.Api 接受到事件 =》发出集成事件通知，由消息服务队列捕获
+

@@ -11,8 +11,8 @@ namespace Project.Domain.Events
     /// <summary>
     /// 项目创建事件
     /// </summary>
-    public class ProjectCreatedEvent:INotification
-    {
+    public class ProjectCreatedEvent : INotification
+    {    
         public AggregatesModel.Project Project { get; set; }
     }
 }

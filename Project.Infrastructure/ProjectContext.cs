@@ -16,16 +16,7 @@ namespace Project.Infrastructure
         public DbSet<Domain.AggregatesModel.Project> Projects { get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfiguration(new ProjectEntityConfiguration());            
-            modelBuilder.ApplyConfiguration(new ProjectContributorEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new ProjectViewerEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new ProjectPropertyEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new ProjectVisibleRuleEntityConfiguration());
-
-        }
-
+   
         public ProjectContext(DbContextOptions<ProjectContext> options, IMediator mediator) : base(options)
         {
             _mediatR = mediator;
@@ -36,5 +27,16 @@ namespace Project.Infrastructure
             await base.SaveChangesAsync();
             return true;         
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new ProjectEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectContributorEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectViewerEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectPropertyEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectVisibleRuleEntityConfiguration());
+
+        }
+
     }
 }

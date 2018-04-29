@@ -13,7 +13,14 @@ namespace Project.Domain.Events
     /// <summary>
     /// 有人参与项目事件
     /// </summary>
-    public class ProjectJoinEvent:INotification    {
+    public class ProjectJoinEvent:INotification
+    {
+
+        public string Company { get; set; }
+
+        public string Introduction { get; set; }
+
+
         public ProjectContributor ProjectContributor { get; set; }
     }
 }

@@ -79,9 +79,9 @@ namespace ProShare.UserApi
                     d.DiscoveryServerHostName = "localhost";
                     d.DiscoveryServerPort = 8500;
                     d.CurrentNodeHostName = "localhost";
-                    d.CurrentNodePort = 5800;
+                    d.CurrentNodePort = 5002;
                     d.NodeId = 1;
-                    d.NodeName = "CAP No.1 Node";
+                    d.NodeName = "CAP User API Node";
 
                 });
 

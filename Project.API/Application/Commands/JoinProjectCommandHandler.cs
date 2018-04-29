@@ -26,6 +26,8 @@ namespace Project.API.Application.Commands
             var project = await _projectRepository.GetAsync(request.Contributor.ProjectId);
             if (project == null) throw new ProjectDomainException($"项目不存在: {request.Contributor.ProjectId}");
 
+            if(project.UserId ==request.Contributor.UserId) throw new ProjectDomainException($"不能加入到自己的项目");
+
             project.AddContributor(request.Contributor);
              await _projectRepository.UnitOfWork.SaveEntitiesAsync();
         

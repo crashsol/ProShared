@@ -5,26 +5,46 @@ using System.Threading.Tasks;
 using Project.Domain.AggregatesModel;
 using Project.Domain.SeedWork;
 using PrjectEntity = Project.Domain.AggregatesModel.Project;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Project.Infrastructure.Repositorys
 {
     public class ProjectRepository : IProjectRepository
     {
-        public IUnitOfWork UnitOfWork => throw new NotImplementedException();
 
-        public Task<PrjectEntity> AddAsync(PrjectEntity project)
+        private readonly ProjectContext _dbContext;
+        public ProjectRepository(ProjectContext projectContext)
         {
-            throw new NotImplementedException();
+            _dbContext = projectContext;
+        }
+        public IUnitOfWork UnitOfWork => _dbContext;
+       
+
+        public PrjectEntity Add(PrjectEntity project)
+        {
+            if(project.IsTransient())
+            {
+                return _dbContext.Add(project).Entity;
+            }
+            return project;
         }
 
-        public Task<PrjectEntity> GetAsync(int id)
+        public async Task<PrjectEntity> GetAsync(int id)
         {
-            throw new NotImplementedException();
+             var project =    await _dbContext.Projects
+                        .Include(p => p.Properties)
+                        .Include(p => p.Viewers)
+                        .Include(a => a.Contributors)
+                        .Include(a => a.VisibleRule)
+                        .SingleOrDefaultAsync(b => b.Id == id);
+            return project;
+                      
         }
 
-        public Task<PrjectEntity> UpdateAsync(PrjectEntity project)
+        public void Update(PrjectEntity project)
         {
-            throw new NotImplementedException();
+            _dbContext.Projects.Update(project);        
         }
     }
 }

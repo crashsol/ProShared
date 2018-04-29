@@ -247,6 +247,7 @@ namespace Project.Domain.AggregatesModel
             Viewers = new List<ProjectViewer>();
           
             Contributors = new List<ProjectContributor>();
+            CreatedTime = DateTime.Now;
 
             //添加项目创建事件
             AddDomainEvent(new ProjectCreatedEvent { Project = this });
@@ -270,7 +271,12 @@ namespace Project.Domain.AggregatesModel
                 Viewers.Add(viewer);
 
                 //添加查看项目
-                AddDomainEvent(new ProjectViewedEvent { ProjectViewer = viewer });
+                AddDomainEvent(new ProjectViewedEvent
+                {  
+                    Company =this.Company,
+                    Introduction =this.Introduction,
+                    ProjectViewer = viewer
+                });
             }
 
         }
@@ -287,7 +293,11 @@ namespace Project.Domain.AggregatesModel
                 Contributors.Add(projectContributor);
 
                 //添加 参与项目事件
-                AddDomainEvent(new ProjectJoinEvent { ProjectContributor = projectContributor });
+                AddDomainEvent(new ProjectJoinEvent {
+                    Company =this.Company,
+                    Introduction =this.Introduction,
+                    ProjectContributor = projectContributor
+                });
             }
         }
        

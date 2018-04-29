@@ -27,6 +27,9 @@ namespace Project.API.Application.Commands
 
            if(project == null) throw new ProjectDomainException($"项目不存在: {request.ProjectId}");
 
+
+           if(project.UserId == request.UserId) throw new ProjectDomainException($"不能查看自己的项目");
+           
             project.AddViewer(request.UserId, request.UserName, request.Avatar);
 
            await _projectRepository.UnitOfWork.SaveEntitiesAsync();

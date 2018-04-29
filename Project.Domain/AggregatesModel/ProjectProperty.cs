@@ -11,6 +11,9 @@ namespace Project.Domain.AggregatesModel
     /// </summary>
     public class ProjectProperty : ValueObject
     {
+
+        public int ProjectId { get; set; }
+
         public string Key { get; set; }
 
         public string Value { get; set; }
