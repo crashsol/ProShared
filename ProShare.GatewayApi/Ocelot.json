@@ -173,6 +173,20 @@
         "AuthenticationProviderKey": "ProShare",
         "AllowedScopes": [ "project_api" ]
       }
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/recommends",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/recommends",
+      "UpstreamHttpMethod": [ "get" ],
+      "ServiceName": "RecommendApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ProShare",
+        "AllowedScopes": [ "recommend_api" ]
+      }
     }
 
   ],
