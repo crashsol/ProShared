@@ -18,8 +18,9 @@ namespace ProShare.IdentityApi
                 new ApiResource("gateway_api","gateway service"),
                 new ApiResource("user_api", "user service"),
                 new ApiResource("contact_api","contact service"),
-                new ApiResource("project_api","project service")
-                
+                new ApiResource("project_api","project service"),
+                new ApiResource("recommend_api","recommend service")                
+
             };
         }
 
@@ -44,6 +45,7 @@ namespace ProShare.IdentityApi
                        "user_api",
                        "contact_api",
                        "project_api",
+                       "recommend_api",
                        IdentityServerConstants.StandardScopes.OpenId,
                        IdentityServerConstants.StandardScopes.Profile,
                        IdentityServerConstants.StandardScopes.OfflineAccess

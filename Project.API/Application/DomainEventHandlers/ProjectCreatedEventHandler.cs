@@ -34,7 +34,13 @@ namespace Project.API.Application.DomainEventHandlers
             {
                 CreatedTime = DateTime.Now,
                 UserId = notification.Project.UserId,
-                ProjectId = notification.Project.Id
+                ProjectId = notification.Project.Id,
+                Company = notification.Project.Company,
+                FinStage = notification.Project.FinStage,
+                Introducation = notification.Project.Introduction,
+                ProjectAvatar = notification.Project.Avatar,
+                Tags = notification.Project.Tags
+
             };
             _capPublisher.Publish("proshare.projectapi.projectcreated", @event);
             return Task.CompletedTask;

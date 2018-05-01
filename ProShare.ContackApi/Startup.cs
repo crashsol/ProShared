@@ -109,7 +109,7 @@ namespace ProShare.ContactApi
                 {
                     d.DiscoveryServerHostName = "localhost";
                     d.DiscoveryServerPort = 8500;
-                    d.CurrentNodeHostName = "localhost_contactapi";
+                    d.CurrentNodeHostName = "localhost";
                     d.CurrentNodePort = 5003;
                     d.NodeId = 3;
                     d.NodeName = "CAP Contact API Node";

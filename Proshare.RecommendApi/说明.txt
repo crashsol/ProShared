@@ -1,0 +1,3 @@
+﻿1、接受Integration Event 实现Project Created event handler
+2、创建recommend Ef ，通过Ef Context插入数据库
+3、写 recommend Api Controller ,提供对外访问API ，Getrecommends

@@ -49,7 +49,19 @@ namespace ProShare.ContactApi.Controllers
         {
             return Ok(await _contactBookRepository.GetContactsAsync(UserIdentity.UserId, cancellationToken));
 
-        }    
+        }
+        /// <summary>
+        /// 获取好友列表
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{userId}")]
+        public async Task<IActionResult> GetContactsAsync(int userId,CancellationToken cancellationToken)
+        {
+            return Ok(await _contactBookRepository.GetContactsAsync(userId, cancellationToken));
+
+        }
 
 
         /// <summary>
