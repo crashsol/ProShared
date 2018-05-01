@@ -36,6 +36,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Domain", "Project.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Infrastructure", "Project.Infrastructure\Project.Infrastructure.csproj", "{3E886121-0995-4C5A-9A3A-DB07F4D81264}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proshare.RecommendApi", "Proshare.RecommendApi\Proshare.RecommendApi.csproj", "{77D85F5C-9B7C-418A-8EDF-37C0029236A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +88,10 @@ Global
 		{3E886121-0995-4C5A-9A3A-DB07F4D81264}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E886121-0995-4C5A-9A3A-DB07F4D81264}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E886121-0995-4C5A-9A3A-DB07F4D81264}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77D85F5C-9B7C-418A-8EDF-37C0029236A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77D85F5C-9B7C-418A-8EDF-37C0029236A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77D85F5C-9B7C-418A-8EDF-37C0029236A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77D85F5C-9B7C-418A-8EDF-37C0029236A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{F5219B4A-3A1A-43A3-8343-526CCC78A185} = {5D1E1255-9B9D-441F-AB20-A11EB1979623}
 		{A270656D-5130-4DA5-94E5-5806A1ED68CE} = {5D1E1255-9B9D-441F-AB20-A11EB1979623}
 		{3E886121-0995-4C5A-9A3A-DB07F4D81264} = {5D1E1255-9B9D-441F-AB20-A11EB1979623}
+		{77D85F5C-9B7C-418A-8EDF-37C0029236A2} = {B5B8D4F8-1FB2-4D4E-8133-C76AE2FCAAEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC13CAEB-1970-42EA-B13B-44315F2DEAEB}
