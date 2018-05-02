@@ -34,7 +34,8 @@ namespace ProShare.GatewayApi
                     options.RequireHttpsMetadata = false; //是否启用Https                  
                 });
             //添加Ocelot 依赖注入
-            services.AddOcelot();
+            services.AddOcelot()
+                .AddStoreOcelotConfigurationInConsul();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
