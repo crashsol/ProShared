@@ -9,7 +9,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "user_api" ]
       }
     },
@@ -22,7 +22,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "user_api" ]
       }
     },
@@ -35,7 +35,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "user_api" ]
       }
     },
@@ -66,7 +66,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "contact_api" ]
       }
     },
@@ -79,7 +79,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "contact_api" ]
       }
     },
@@ -92,7 +92,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "contact_api" ]
       }
     },
@@ -105,7 +105,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "contact_api" ]
       }
     },
@@ -118,7 +118,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "project_api" ]
       }
     },
@@ -131,7 +131,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "project_api" ]
       }
     },
@@ -144,7 +144,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "project_api" ]
       }
     },
@@ -157,7 +157,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "project_api" ]
       }
     },
@@ -170,7 +170,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "project_api" ]
       }
     },
@@ -184,7 +184,7 @@
       "LoadBalancer": "LeastConnection",
       "UseServiceDiscovery": true,
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ProShare",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "recommend_api" ]
       }
     }
