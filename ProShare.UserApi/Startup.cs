@@ -1,26 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ConsulExtensions;
+using Infrastructure.Filter;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using ProShare.UserApi.Data;
-using Microsoft.EntityFrameworkCore;
 using ProShare.UserApi.Models;
-using ProShare.UserApi.Models.Dtos;
-using Consul;
-using Microsoft.AspNetCore.Hosting.Server.Features;
-using Microsoft.AspNetCore.Http.Features;
-using Infrastructure.Filter;
-using System.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using ConsulExtensions;
-using ConsulExtensions.Dtos;
+using System.Linq;
+using Microsoft.Extensions.PlatformAbstractions;
+using System.IO;
 
 namespace ProShare.UserApi
 {
@@ -90,6 +82,20 @@ namespace ProShare.UserApi
 
             #endregion
 
+
+            #region 添加SwaggerUI
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("UserApi", new Info { Title = "User API接口", Version = "v1" });
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var xmlPath = Path.Combine(basePath, "ProShare.UserApi.xml");
+                options.IncludeXmlComments(xmlPath);
+            });
+
+
+            #endregion
+
             services.AddMvc(option =>
             {
                 option.Filters.Add(typeof(GlobalExceptionFilter));//添加全局异常处理
@@ -114,7 +120,18 @@ namespace ProShare.UserApi
             //启用cap
             app.UseCap();
 
+
             app.UseMvc();
+
+
+            app.UseSwagger(c => {
+                c.RouteTemplate = "{documentName}/swagger.json";
+            });
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "UserApi V1");
+            });
+
             InitDataBase(app);
         }
 

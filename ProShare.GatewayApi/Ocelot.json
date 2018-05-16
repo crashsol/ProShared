@@ -174,7 +174,6 @@
         "AllowedScopes": [ "project_api" ]
       }
     },
-
     {
       "DownstreamPathTemplate": "/api/recommends",
       "DownstreamScheme": "http",
@@ -187,8 +186,44 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [ "recommend_api" ]
       }
-    }
+    },
 
+    {
+      "DownstreamPathTemplate": "/UserApi/swagger.json",
+      "DownstreamScheme": "http",
+      "ServiceName": "UserApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "UpstreamPathTemplate": "/UserApi/swagger.json",
+      "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/ProjectApi/swagger.json",
+      "DownstreamScheme": "http",
+      "ServiceName": "ProjectApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "UpstreamPathTemplate": "/ProjectApi/swagger.json",
+      "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/ContactApi/swagger.json",
+      "DownstreamScheme": "http",
+      "ServiceName": "ContactApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "UpstreamPathTemplate": "/ContactApi/swagger.json",
+      "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/RecommendApi/swagger.json",
+      "DownstreamScheme": "http",
+      "ServiceName": "RecommendApi",
+      "LoadBalancer": "LeastConnection",
+      "UseServiceDiscovery": true,
+      "UpstreamPathTemplate": "/RecommendApi/swagger.json",
+      "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PUT" ]
+    }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:5000",

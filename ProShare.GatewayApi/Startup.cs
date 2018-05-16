@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace ProShare.GatewayApi
 {
@@ -34,6 +35,13 @@ namespace ProShare.GatewayApi
                     options.ApiSecret = "secret";
                     options.RequireHttpsMetadata = false; //是否启用Https     
                 });
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("ApiGateway", new Info { Title = "网关服务", Version = "v1" });
+            });
+
+            services.AddMvcCore().AddApiExplorer();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +51,17 @@ namespace ProShare.GatewayApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            var apis = new List<string> { "UserApi", "ProjectApi", "ContactApi", "RecommendApi" };
+            app.UseMvc()
+               .UseSwagger()
+               .UseSwaggerUI(options =>
+               {
+                   apis.ForEach(m =>
+                   {
+                       options.SwaggerEndpoint($"/{m}/swagger.json", m);
+                   });
+               });
 
             //启动Ocelot管道
             app.UseOcelot().Wait();

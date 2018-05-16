@@ -21,6 +21,9 @@ using Project.API.Application.Services;
 using Project.Domain.AggregatesModel;
 using Project.Infrastructure.Repositorys;
 using DotNetCore.CAP;
+using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.Extensions.PlatformAbstractions;
+using System.IO;
 
 namespace Project.API
 {
@@ -97,6 +100,20 @@ namespace Project.API
 
             #endregion
 
+
+            #region 添加SwaggerUI
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("ProjectApi", new Info { Title = "Project Api接口", Version = "v1" });
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var xmlPath = Path.Combine(basePath, "Project.API.xml");
+                options.IncludeXmlComments(xmlPath);
+            });
+
+
+            #endregion
+
             services.AddMvc(option =>
             {
                 option.Filters.Add(typeof(GlobalExceptionFilter));
@@ -117,6 +134,14 @@ namespace Project.API
 
             //启用Authentication
             app.UseAuthentication();
+
+            app.UseSwagger(c => {
+                c.RouteTemplate = "{documentName}/swagger.json";
+            });
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProjectApi V1");
+            });
 
             app.UseMvc();
         }

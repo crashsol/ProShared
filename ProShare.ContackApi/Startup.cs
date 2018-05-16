@@ -25,6 +25,9 @@ using System.IdentityModel.Tokens.Jwt;
 using ConsulExtensions;
 using ConsulExtensions.Dtos;
 using ProShare.ContactApi.IntergrationEventService;
+using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.Extensions.PlatformAbstractions;
+using System.IO;
 
 namespace ProShare.ContactApi
 {
@@ -117,7 +120,21 @@ namespace ProShare.ContactApi
                 });
 
             });
-          
+
+
+
+            #endregion
+
+
+            #region 添加SwaggerUI
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("ContactApi", new Info { Title = "Contact Api接口", Version = "v1" });
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var xmlPath = Path.Combine(basePath, "ProShare.ContactApi.xml");
+                options.IncludeXmlComments(xmlPath);
+            });
 
 
             #endregion
@@ -148,7 +165,16 @@ namespace ProShare.ContactApi
             //启用认证框架，以便将header中的Token进行转换到User中
             app.UseAuthentication();
 
-         
+            app.UseSwagger(c => {
+                c.RouteTemplate = "{documentName}/swagger.json";
+            });
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ContactApi V1");
+            });
+
+
+
 
             app.UseMvc();
         }

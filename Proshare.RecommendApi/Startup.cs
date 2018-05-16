@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ConsulExtensions;
@@ -13,12 +14,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.PlatformAbstractions;
 using Proshare.RecommendApi.Data;
 using Proshare.RecommendApi.IntergrationEventHandlers;
 using Proshare.RecommendApi.Services;
 using ProShare.RecommendApi.Infrastructure;
 using ProShare.RecommendApi.Services;
 using Resilience;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Proshare.RecommendApi
 {
@@ -120,6 +123,19 @@ namespace Proshare.RecommendApi
 
             #endregion
 
+            #region 添加SwaggerUI
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("RecommendApi", new Info { Title = "Recommend Api接口", Version = "v1" });
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var xmlPath = Path.Combine(basePath, "Proshare.RecommendApi.xml");
+                options.IncludeXmlComments(xmlPath);
+            });
+
+
+            #endregion
+
 
             services.AddMvc();
         }
@@ -135,6 +151,14 @@ namespace Proshare.RecommendApi
             app.UseAuthentication();
             app.UseCap();
             app.UseConsul();
+
+            app.UseSwagger(c => {
+                c.RouteTemplate = "{documentName}/swagger.json";
+            });
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "RecommendApi V1");
+            });
             app.UseMvc();
         }
     }
