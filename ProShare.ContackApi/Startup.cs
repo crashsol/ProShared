@@ -28,6 +28,7 @@ using ProShare.ContactApi.IntergrationEventService;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.IO;
+using ZipkinExtensions;
 
 namespace ProShare.ContactApi
 {
@@ -152,12 +153,13 @@ namespace ProShare.ContactApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UserZipKin(loggerFactory, "Contact.Api", "http://www.crashcore.cn:9411", "zipkinlogger", 1);
             app.UseConsul();
 
             app.UseCap();

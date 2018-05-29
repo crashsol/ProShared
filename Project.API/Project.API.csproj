@@ -35,6 +35,7 @@
     <ProjectReference Include="..\Project.Domain\Project.Domain.csproj" />
     <ProjectReference Include="..\Project.Infrastructure\Project.Infrastructure.csproj" />
     <ProjectReference Include="..\Resilience\Resilience.csproj" />
+    <ProjectReference Include="..\ZipkinExtensions\ZipkinExtensions.csproj" />
   </ItemGroup>
 
 </Project>

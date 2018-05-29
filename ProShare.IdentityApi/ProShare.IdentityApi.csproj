@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ConsulExtensions\ConsulExtensions.csproj" />
     <ProjectReference Include="..\Resilience\Resilience.csproj" />
+    <ProjectReference Include="..\ZipkinExtensions\ZipkinExtensions.csproj" />
   </ItemGroup>
 
 </Project>

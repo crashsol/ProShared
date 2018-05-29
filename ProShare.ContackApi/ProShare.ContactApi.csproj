@@ -33,6 +33,7 @@
     <ProjectReference Include="..\ConsulExtensions\ConsulExtensions.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\Resilience\Resilience.csproj" />
+    <ProjectReference Include="..\ZipkinExtensions\ZipkinExtensions.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>

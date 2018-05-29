@@ -13,6 +13,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.IO;
+using ZipkinExtensions;
+using Microsoft.Extensions.Logging;
 
 namespace ProShare.UserApi
 {
@@ -104,7 +106,7 @@ namespace ProShare.UserApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -114,6 +116,8 @@ namespace ProShare.UserApi
 
             //启用Consul 注册和发现
             app.UseConsul();
+
+            app.UserZipKin(loggerFactory,"User.Api", "http://www.crashcore.cn:9411","zipkinlogger",1);
 
             app.UseAuthentication();
 

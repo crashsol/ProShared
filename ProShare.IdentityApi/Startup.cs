@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using ConsulExtensions.Dtos;
 using ConsulExtensions;
+using ZipkinExtensions;
 
 namespace ProShare.IdentityApi
 {
@@ -83,13 +84,13 @@ namespace ProShare.IdentityApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UserZipKin(loggerFactory, "Identity.Api", "http://www.crashcore.cn:9411", "zipkinlogger", 1);
             //启用服务注册于发现
             app.UseConsul();
 
