@@ -20,16 +20,20 @@ namespace ProShare.IdentityApi.Infrastructure
         private readonly int _exceptionsAllowedBeforeBreaking;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ResilientHttpClientFactory(ILogger<ResilientHttpClient> logger, IHttpContextAccessor httpContextAccessor, int exceptionsAllowedBeforeBreaking = 5, int retryCount = 6)
+        //zipkin追踪的名称
+        private readonly string _traceingApplicationName;
+
+        public ResilientHttpClientFactory(string applicationName,ILogger<ResilientHttpClient> logger, IHttpContextAccessor httpContextAccessor, int exceptionsAllowedBeforeBreaking = 5, int retryCount = 6)
         {
             _logger = logger;
             _exceptionsAllowedBeforeBreaking = exceptionsAllowedBeforeBreaking;
             _retryCount = retryCount;
             _httpContextAccessor = httpContextAccessor;
+            _traceingApplicationName = applicationName;
         }
 
         public ResilientHttpClient CreateResilientHttpClient()
-                    => new ResilientHttpClient((origin) => CreatePolicies(), _logger, _httpContextAccessor);
+                    => new ResilientHttpClient(_traceingApplicationName,(origin) => CreatePolicies(), _logger, _httpContextAccessor);
 
 
         //origin  创建 Policy 策略，这个可以根据origin 设定不同的Policy组

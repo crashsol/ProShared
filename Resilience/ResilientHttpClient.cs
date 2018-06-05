@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using zipkin4net.Transport.Http;
 
 namespace Resilience
 {
@@ -39,10 +40,10 @@ namespace Resilience
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ResilientHttpClient(Func<string,IEnumerable<Policy>> policyCreator,ILogger<ResilientHttpClient> logger, IHttpContextAccessor httpContextAccessor)
+        public ResilientHttpClient(string applicationName,Func<string,IEnumerable<Policy>> policyCreator,ILogger<ResilientHttpClient> logger, IHttpContextAccessor httpContextAccessor)
         {
             //直接创建一个
-            _client = new HttpClient(); 
+            _client = new HttpClient(new TracingHandler(applicationName)); 
 
             //创建一个Policy包装器
             _policyWrappers = new ConcurrentDictionary<string, PolicyWrap>();

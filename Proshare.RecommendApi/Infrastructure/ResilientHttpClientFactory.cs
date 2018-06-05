@@ -19,22 +19,22 @@ namespace ProShare.RecommendApi.Infrastructure
         //失败几次后断路器打开
         private readonly int _exceptionsAllowedBeforeBreaking;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private ILogger<ResilientHttpClient> logger;
-        private IHttpContextAccessor httpContextAccessor;
-        private int retryCount;
-        private int excetionAllowBeforeBreaking;
 
-        public ResilientHttpClientFactory(ILogger<ResilientHttpClient> logger, IHttpContextAccessor httpContextAccessor, int exceptionsAllowedBeforeBreaking = 5, int retryCount = 6)
+
+        private readonly string _traceingApplicationName;
+
+        public ResilientHttpClientFactory(string applicationName,ILogger<ResilientHttpClient> logger, IHttpContextAccessor httpContextAccessor, int exceptionsAllowedBeforeBreaking = 5, int retryCount = 6)
         {
             _logger = logger;
             _exceptionsAllowedBeforeBreaking = exceptionsAllowedBeforeBreaking;
             _retryCount = retryCount;
             _httpContextAccessor = httpContextAccessor;
+            _traceingApplicationName = applicationName;
         }
      
 
         public ResilientHttpClient CreateResilientHttpClient()
-                    => new ResilientHttpClient((origin) => CreatePolicies(), _logger, _httpContextAccessor);
+                    => new ResilientHttpClient(_traceingApplicationName, (origin) => CreatePolicies(), _logger, _httpContextAccessor);
 
 
         //origin  创建 Policy 策略，这个可以根据origin 设定不同的Policy组

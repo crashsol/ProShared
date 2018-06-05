@@ -83,7 +83,7 @@ namespace ProShare.ContactApi
                 //设置在断路器启用前，允许失败次数
                 var excetionAllowBeforeBreaking = 5;
                 //返回ResilienceFactroy实例
-                return new ResilientHttpClientFactory(logger, httpContextAccessor, retryCount, excetionAllowBeforeBreaking);
+                return new ResilientHttpClientFactory("Contact.Api",logger, httpContextAccessor, retryCount, excetionAllowBeforeBreaking);
             });
 
             //注入IHttpClient 用ResilientHttpClient实现

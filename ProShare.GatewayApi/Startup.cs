@@ -29,6 +29,7 @@ namespace ProShare.GatewayApi
             //添加Ocelot 依赖注入,
             services.AddOcelot()
                 .AddStoreOcelotConfigurationInConsul() //向Consul KV中心缓存配置信息
+                .AddSingletonDelegatingHandler<ZipKinTraceHandler>(true) //添加zipkin tracer HttpClient
                 .AddAdministration("/Administrator", options =>
                 {
                     //配置IdentityServer
