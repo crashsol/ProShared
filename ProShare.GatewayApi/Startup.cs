@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Swashbuckle.AspNetCore.Swagger;
+using zipkin4net.Transport.Http;
 using ZipkinExtensions;
 
 namespace ProShare.GatewayApi
@@ -26,6 +27,7 @@ namespace ProShare.GatewayApi
         public void ConfigureServices(IServiceCollection services)
         {
 
+       
             //添加Ocelot 依赖注入,
             services.AddOcelot()
                 .AddStoreOcelotConfigurationInConsul() //向Consul KV中心缓存配置信息

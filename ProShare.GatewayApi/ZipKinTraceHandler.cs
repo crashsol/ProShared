@@ -8,12 +8,8 @@ using zipkin4net.Transport.Http;
 
 namespace ProShare.GatewayApi
 {
-    public class ZipKinTraceHandler: DelegatingHandler
+    public class ZipKinTraceHandler: TracingHandler
     {
-        public ZipKinTraceHandler() : base(new TracingHandler("Gateway.Api")) { }
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            return base.SendAsync(request, cancellationToken);
-        }
+        public ZipKinTraceHandler() : base("Gateway.Api") { }       
     }
 }
